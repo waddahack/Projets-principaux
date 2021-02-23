@@ -1,0 +1,108 @@
+<?xml version = "1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE partiecours [
+<!ELEMENT partiecours (cours)>
+<!ELEMENT cours ANY>
+<!ATTLIST cours num ID #REQUIRED>
+]>
+<partiecours>
+    <cours num="1">
+	    <![CDATA[
+		    <body>
+		    <h1>Cours n°1 : Les Notes</h1>
+		    <h2>I. Les notes de musiques</h2>
+		    <p>Il faut bien apprendre et connaître l'ordre des notes, à la fois dans l'ordre ascendant : Do, Ré, Mi, Fa, Sol, La, Si, Do mais aussi dans l'ordre inverse, à savoir Do, Si, La, Sol, Fa, Mi, Ré, Do.
+		    Les notes sont placées sur les lignes et interlignes d'une portée. La clef vous donne un repère, par exemple il donne le Sol pour la clef de Sol. C'est à vous de trouver le noms des autres notes. 
+		    Connaitre l'ordre des notes des les deux sens est très important car les notes s'écrivent dans les deux sens et cette connaissance vous aidera à lire les notes.
+            
+		    Dans la suite de ce cours, nous allons voir comment ces notes peuvent être conjointes ou disjointes, comment elles s'écrivent sur une portée et former des mouvements mélodiques ascendants ou descendants.
+		    Les figures de notes permettent justement de définir la durée des notes.</p>
+		    <p>Il existe plusieurs figures de notes sachant de la Ronde représente la valeur de référence. Les autres figures de notes (la Blanche, la Noire...) représentent des divisions de la Ronde (par exemple, 
+		    une Blanche représente la moitié d'une Ronde).
+		    Il y a donc des équivalences de durée (une Ronde "vaut" deux Blanches) à connaître et que je vous propose d'étudier. Nous allons également expliquer comment ces figures de notes sont constituées 
+		    (note creuse, note pleine, la hampe...).</p>
+		    <h2>II. Les figures de silences.</h2>
+		    <p>Les figures de notes et de silences, à partir du moment où elles expriment des durées, sont bien entendu très liées au rythme et à la pulsation rythmique. Quand vous jouez une partition de musique, 
+		    il faut bien veiller à respecter ces valeurs de temps. Une Noire n'est pas une croche, un Ronde n'est pas une Blanche etc...
+		    Dès le début de votre apprentissage musical, n'oubliez pas cette notion et si besoin (et il est très recommandé de le faire), aidez vous d'un métronome. Vous pouvez également vous servir du pied, 
+		    d'un crayon ou de votre doigt pour battre la mesure. Le principal avantage du métronome est qu'il est régulier.</p>
+		    <p>Cette notion de rythme et de durée de notes peut également être mise en oeuvre dans vos exercices de lecture de notes. Lire les notes consiste généralement à dire le nom des notes.
+		    Vous pouvez compléter cet exercice en lisant les notes tout en respectant le rythme.
+		    Si vous faites des exercices de lecture de notes avec la même figure de notes (toutes les notes sont des Noires par exemple), tenez tout de même compte du rythme, chaque notre doit être dite à la même vitesse.
+
+		    Cela ne vous aidera pas pour le rythme en lui même mais cela sera bénéfique pour la lecture de notes.</p>
+		    <h2>III. Les figures de notes</h2>
+		    <p>La figure de note de référence est la ronde (valeur = 1), qui est la seule figure de note sans hampe (barre vertiacle placée à côté de la tête de note, autrement appelée queue).
+		    NB : nous ne parlons pas de la note "carrée" qui est l'équivalent de 2 rondes car c'est bien la ronde qui fait office de référence (en terme de valeur, donc de durée) pour les autres figures de note.
+
+		    Les autres figures de notes ne sont qu'une division de cette valeur de référence. La "tête" d'une figure de note est vide (ronde ou blanche) ou pleine (noire, croche, double/triple/quadruple croche). 
+		    Chaque figure de note vaut la moitié de celle qui la précède. Par exemple, la ronde vaut 1, la blanche vaudra la moitié (1/2), la noire un quart (1/4)....</p>
+		    <p>La déclinaison des valeurs est la suivante (en partant de la plus longue avec entre parenthèse la valeur) :</p>
+		    <ul>
+			    <li>La ronde (1) qui est représentée par une note creuse sans hampe</li>
+			    <li>La blanche (1/2) qui est une note creuse avec hampe</li>
+			    <li>La noire (1/4) qui est une note pleine avec hampe</li>
+			    <li>La croche (1/8) qui est une note pleine avec hampe et 1 crochet</li>
+			    <li>La double croche (1/16) qui est une note pleine avec hampe et 2 crochets</li>
+			    <li>La triple croche (1/32) qui est une note pleine avec hampe et 3 crochets</li>
+			    <li>La quadruple croche (1/64) qui est une note pleine avec hampe et 4 crochets</li>
+			    <li>I faut donc rappeler et il est important de comprendre que la figure de note n'exprime qu'une durée mais pas le nom de la note.</li>
+		    </ul>
+		    <p>Le nom de la note est donné par sa position sur une portée et de la clef utilisée, qui peut être une clef de Sol, de Fa ou de Do (Ut).</p>
+		    </body>
+	    ]]>
+    </cours>
+    <cours num="2">
+        <![CDATA[
+            <body>
+		    <h1>Cours n°2 : Le Rythme</h1>
+            <h2>I. Le tempo</h2>
+            <p>La première chose à faire, pour lire un rythme, consiste à trouver la pulsation(tempsou batte-ment). La pulsation, en musique, est constante, comme les battements de votre coeur ou le tic-tacd’une horloge. Le rythme d’un morceau de musique est basé sur une unité de tempsqui s’entend etse sent. Lorsque, en écoutant de la musique animée, vous vous mettez à taper du pied en rythme,c’est que vous ressentez cette unité de temps et que vous la marquez du pied. Ce battement peutêtre représenté au moyen de notes de musique placées à intervalles égaux</p>
+           <p>Dans la musique écrite, les temps et les notes sont groupés en mesures. Les mesures peuvent contenir autant de temps que l'on veux (et ce nombre peux même changer pendant un morceau!). Elles sont séparées par des barres de mesure.</p>
+           <p>Pour pouvoir s'y retrouver, on ecrit ce nombre de temps au debut de la premiere mesure concerné (donc dans la grande majorité des cas, au debut de la partition). On ecrit ainsi 2 chiffre l'un sur l'autre, celui au dessus représente le nombre de note dans une mesure dont le type est donné par le chiffre du dessous.<p>
+
+            <h2>II. Les rythmes de base</h2>
+            <p> Nous allons ici définir les types de notes évoqué précédemment à l'aide d'un tableau.
+            <table>
+            <tr>
+                <td>Nom</td>
+                <td>Nombre de battement</td>
+            </tr>
+            <tr>
+                <td>ronde</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>blanche pointée</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>blanche</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>noire</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>noire pointée</td>
+                <td>1,5</td>
+            </tr>
+            <tr>
+                <td>croche</td>
+                <td>1/2</td>
+            </tr>
+            <tr>
+                <td>double croche</td>
+                <td>1/2</td>
+            </tr>
+            <tr>
+                <td>quadruple croche</td>
+                <td>1/4</td>
+            </tr>
+            </table>
+            <p>Pour en revenir à la notation en debut de partition, le chiffre inferieur représente le nombre de fois que l'on peut jouer la note pendant une ronde (la note la plus longue existante, c'est à dire 4 temps). Ainsi 4 représente la noire, 2 la blanche et 8 la croche. D'après ce qu'on a vu précedement, on à ainsi pour une notation 4/4, on peut placer 4 noire dans une mesure. Pour du 2/4, seulement 2 noires et pour du 6/8, 6 croches. On ne rencontre le plus souvant qu'un 4 (noire) ou un 8 (croche) comme valeur inferieur. Lorque c'est un 4, le morceaux est dit "binaire" et quand c'est un 8, il est qualifié de "ternaire".
+            <h2>III. Binaire et Ternaire</h2>
+            <p>Ces deux modes sont importants car ils peuvent changer le ressentit du rythme et donc de la musique. Le mode Binaire est le mode classique, chaque temps est divisible en un nombre paire de rythme plus rapide. Par exemple en 4/4 un temps est représenté par une noire qui se divise en 2 croches, 4 quadruples-croches etc...  Le ternaire lui est le mode de la valse, chaque temps ce divise en un multiple de trois. En plus de cela, le mode ternaire à une spécificité. Rappelez vous que la notation 6/8 indiquais que l'on pouvait placer 6 croches dans une mesure. En ternaire un temps ce divise en trois, donc ici un temps vaudra 3 croches. On aura donc 2 temps par mesure dans une partition notée en 6/8. Ainsi un temps est caractérisé en ternaire par une noire pointée, et en binaire par une noire. Attention ! Si dans le mode ternaire, on utilise le 8 (la croche) comme notation ce n'est pas pour rien ! En effet dans ce mode on décompose toujours les temps en croches (comme dans une valse). Vous pouvez vous exercer en tapant du pied sur chaque temps et en tappant dans vos mains sur les 3 croches de chaque temps ce qui donne : <strong>pied/main</strong>-main-main-<strong>pied/main</strong>-main-main-<strong>pied/main</strong>-main-main.</p>
+        ]]>
+    </cours>
+</partiecours>

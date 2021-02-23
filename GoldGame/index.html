@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>GG - The Gold Game</title>
+</head>
+<body>
+	<header>
+		<div class="onglet">
+			Mines
+		</div>
+		<div class="onglet">
+			Inventaire
+		</div>
+		<div class="onglet">
+			Marchand
+		</div>
+		<!-- Onglet qui apparait seulement pour le choix d'une mine -->
+		<div id="annuler">
+			Terminer
+		</div>
+	</header>
+
+	<section id="mine">
+		<div class="pioche">
+			<button class="butChoisir">Choisir</button><button class="butMiner">Miner</button>
+			<div class="chargement">
+				<div class="unQuart"></div>
+				<div class="unQuart"></div>
+				<div class="unQuart"></div>
+				<div class="unQuart"></div>
+				<div class="unQuart"></div>
+				<div class="unQuart"></div>
+				<div class="unQuart"></div>
+				<div class="unQuart"></div>
+				<div class="unQuart"></div>
+				<div class="unQuart"></div>
+			</div>
+			<div class="paragraphe">
+				<div class="stuff">0</div> / <div class="stuff">5</div> ouvriers
+			</div>
+			<div class="paragraphe">
+				<div class="stuff">10</div>%
+			</div>
+		</div>
+	</section>
+	
+	<section id="inventaire">
+		<div class="paragraphe" id="nbPepites">
+			Nombre de pépites d'or : <div class="stuff">0</div>
+		</div>
+		<div class="paragraphe">
+			Nombre de pépite(s) d'or par coup de votre pioche : <div class="stuff">1</div>
+		</div>
+		<div class="paragraphe">
+			Temps de réparation de la pioche : <div class="stuff">10</div>
+		</div>
+	</section>
+
+	<section id="upgrades">
+		<div class="paragraphe" id="nbPepites">
+			Nombre de pépites d'or : <div class="stuff">0</div>
+		</div>
+		<div class="paragraphe">
+			- 1 palier de chargement d'une mine <button class="butErreur"></button><button class="butAchat">Acheter pour <div class="prix">1</div> pépite(s)</button>
+		</div>
+		<div class="paragraphe">
+			Votre pioche mine double <button class="butErreur"></button><button class="butAchat">Acheter pour <div class="prix">15</div> pépite(s)</button>
+		</div>
+		<div class="paragraphe">
+			- 1 seconde de temps de réparation de la pioche <button class="butErreur"></button><button class="butAchat">Acheter pour <div class="prix">1</div> pépite(s)</button>
+		</div>
+		<div class="paragraphe">
+			+ 1 ouvrier <button class="butErreur"></button><button class="butAchat">Acheter pour <div class="prix">1</div> pépite(s)</button>
+		</div>
+		<div class="paragraphe">
+			+ 5 places dans une mine <button class="butErreur"></button><button class="butAchat">Acheter pour <div class="prix">200</div> pépite(s)</button>
+		</div>
+		<div class="paragraphe">
+			+ 10% de chance de réussite des ouvriers d'une mine <button class="butErreur"></button><button class="butAchat">Acheter pour <div class="prix">1</div> pépite(s)</button>
+		</div>
+		<div class="paragraphe">
+			+ 1 mine <button class="butErreur"></button><button class="butAchat">Acheter pour <div class="prix">1</div> pépite(s)</button>
+		</div>
+	</section>
+	<div id="prixObjet"></div>
+	<div id="pepites"></div>
+	<div class="popUp" id="gameover">GAME OVER</div>
+	<script type="text/javascript" src="script/script.js"></script>
+</body>
+</html>

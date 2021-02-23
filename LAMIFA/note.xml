@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<note nom="C">
+	<valeur>0</valeur>
+</note>
+
+<note nom="D">
+	<valeur>2</valeur>
+</note>
+
+<note nom="E">
+	<valeur>4</valeur>
+</note>
+
+<note nom="F">
+	<valeur>6</valeur>
+</note>
+
+<note nom="A">
+	<valeur>8</valeur>
+</note>
+
+<note nom="B">
+	<valeur>10</valeur>
+</note>
