@@ -11,7 +11,8 @@ public class CircleTower extends Tower{
     public static int priceP = 350;
     
     public CircleTower(){
-        super();
+        super(Towser.circleTower, "circleTower");
+        canRotate = false;
         price = priceP;
         power = 10;
         shootRate = 0.3;

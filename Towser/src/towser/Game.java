@@ -24,13 +24,12 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import org.newdawn.slick.opengl.Texture;
 import static towser.Towser.windHeight;
 import static towser.Towser.windWidth;
-import ui.Button;
-import ui.Overlay;
+import ui.*;
 
 
 public class Game {
     
-    private static ArrayList<ArrayList<Integer>> map;
+    private static ArrayList<ArrayList<Tile>> map;
     private static ArrayList<Integer> spawn, base;
     public static int unite = 50, money,/* stone, coal, gold, wood, */life, waveNumber, waveReward;
     private int mapW = windWidth/unite, mapH = windHeight/unite;
@@ -114,7 +113,8 @@ public class Game {
         }
         for(i = 0 ; i < ennemies.size() ; i++){
             e = ennemies.get(i);
-            if(e.isSpawned()) Towser.drawFilledCircle(e.getX(), e.getY(), e.getWidth(), e.getR(), e.getG(), e.getB());
+            if(e.isSpawned())
+                Towser.drawFilledCircle(e.getX(), e.getY(), e.getWidth(), e.getR(), e.getG(), e.getB());
         }
         for(Tower t : towers){
             if(!t.isPlaced()){
@@ -134,32 +134,48 @@ public class Game {
     }
     
     private void readFile(String path){
-        map = new ArrayList<ArrayList<Integer>>();
+        map = new ArrayList<ArrayList<Tile>>();
         spawn = new ArrayList<Integer>();
         base = new ArrayList<Integer>();
         try{
             File file = new File(path);
             Scanner myReader = new Scanner(file);
-            ArrayList<Integer> row = new ArrayList<Integer>();
+            ArrayList<Tile> row = new ArrayList<Tile>();
             int x = 0, y = 0;
             while(myReader.hasNextInt()){
               int data = myReader.nextInt();
-              row.add(data);
-              if(data == 3){
-                  spawn.add(x);
-                  spawn.add(y);
-              }
-              else if(data == 4){
-                  base.add(x);
-                  base.add(y);
+              switch(data){
+                  case 0:
+                      row.add(new Tile(Towser.wall, "wall"));
+                      break;
+                  case 1:
+                      row.add(new Tile(Towser.grass, "grass"));
+                      break;
+                  case 2:
+                      row.add(new Tile(Towser.road, "road"));
+                      break;
+                  case 3:
+                      row.add(new Tile(0.9f, 0.1f, 0.1f, "spawn"));
+                      spawn.add(x);
+                      spawn.add(y);
+                      break;
+                  case 4:
+                      row.add(new Tile(0.1f, 0.1f, 0.9f, "base"));
+                      base.add(x);
+                      base.add(y);
+                      break;
+                  default:
+                      row.add(new Tile(0.0f, 0.0f, 0.0f, "void"));
+                      break;
               }
               if(row.size() == mapW){
                   map.add(row);
-                  row = new ArrayList<Integer>();
+                  row = new ArrayList<Tile>();
                   x = 0;
                   y++;
               }
-              else x++;
+              else
+                  x++;
               if(map.size() == mapH)
                   break;
             }
@@ -180,67 +196,29 @@ public class Game {
         towersDestroyed.clear();
     }
     
-    private void createBlock(int x, int y, int type){ // 0 = wall, 1 = grass, 2 = road, 3 = spawner, 4 = base
+    private void createBlock(int x, int y, Tile tile){
         float r = 100, g = r, b = r;
-        Texture t = null;
-        switch(type){
-            case 0 :
-                if(currentText != Towser.wall){
-                    currentText = Towser.wall;
-                    t = currentText;
-                    t.bind();
-                }
-                break;
-            case 1 :
-                if(currentText != Towser.grass){
-                    currentText = Towser.grass;
-                    t = currentText;
-                    t.bind();
-                }
-                break;
-            case 2 :
-                if(currentText != Towser.road){
-                    currentText = Towser.road;
-                    t = currentText;
-                    t.bind();
-                }
-                break;
-            case 3 :
-                r = 0.9f;
-                g = 0.1f;
-                b = 0.1f;
-                break;
-            case 4 :
-                r = 0.1f;
-                g = 0.1f;
-                b = 0.9f;
-                break;
-            case 10 :
-                t = Towser.basicTower;
-                if(currentText != Towser.basicTower){
-                    currentText = null;
-                }
-                break;
-            case 11 :
-                t = Towser.circleTower;
-                if(currentText != Towser.circleTower){
-                    currentText = null;
-                }
-                break;
-            default :
-                r = 0.0f;
-                g = 0.0f;
-                b = 0.0f;
-                break;
+        float xRot = 0, yRot = 0;
+        Texture t = tile.getTexture();
+        if(t == null){ // Si pas de text
+            r = tile.getR();
+            g = tile.getG();
+            b = tile.getB();
+        }
+        else if(tile.getTower() == null){ // si c'est pas une tower
+            currentText = t;
+            t.bind();
         }
         
-        if(type >= 10){
-            createBlock(x, y, 1);
+        else{ // Si c'est une tower
+            createBlock(x, y, tile.getBackgroundTile());
+            xRot = (float)(tile.getCos() * unite);
+            yRot = (float)(tile.getSin() * unite);
             t.bind();
             currentText = t;
         }
 
-        if(r == 100){
+        if(t != null){
             glEnable(GL_TEXTURE_2D);
             glColor3f(1, 1, 1);
         }
@@ -249,16 +227,16 @@ public class Game {
         
         glBegin(GL_QUADS);
             glTexCoord2f(0, 0);
-            glVertex2i(x, y);
+            glVertex2f(x + xRot, y + yRot);
             glTexCoord2f(1, 0);
-            glVertex2i(x+unite, y);
+            glVertex2f(x+unite + xRot, y + yRot);
             glTexCoord2f(1, 1);
-            glVertex2i(x+unite, y+unite);
+            glVertex2f(x+unite + xRot, y+unite + yRot);
             glTexCoord2f(0, 1);
-            glVertex2i(x, y+unite);
+            glVertex2f(x + xRot, y+unite + yRot);
         glEnd();
 
-        if(r == 100)
+        if(t != null)
             glDisable(GL_TEXTURE_2D);
     }
     
@@ -422,7 +400,7 @@ public class Game {
         return ennemiesDead;
     }
     
-    public static ArrayList<ArrayList<Integer>> getMap(){
+    public static ArrayList<ArrayList<Tile>> getMap(){
         return map;
     }
     

@@ -15,17 +15,16 @@ import static org.lwjgl.opengl.GL11.glRectf;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2i;
 import org.newdawn.slick.opengl.TextureLoader;
-import towser.Game;
-import towser.Towser;
-import ui.Button;
-import ui.Overlay;
+import towser.*;
+import ui.*;
 
 public class BasicTower extends Tower{
     
     public static int priceP = 200;
     
     public BasicTower() {
-        super();
+        super(Towser.basicTower, "basicTower");
+        canRotate = true;
         price = priceP;
         power = 15;
         shootRate = 0.5f;

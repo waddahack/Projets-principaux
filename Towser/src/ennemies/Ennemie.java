@@ -18,6 +18,7 @@ import towers.Tower;
 import towser.Game;
 import towser.Towser;
 import towser.Shootable;
+import ui.Tile;
 
 public abstract class Ennemie extends Thread implements Shootable{
     
@@ -29,7 +30,7 @@ public abstract class Ennemie extends Thread implements Shootable{
     protected double x, y, speedRatio;
     protected ArrayList<Integer> spawn, base;
     protected String dir;
-    protected ArrayList<ArrayList<Integer>> map;
+    protected ArrayList<ArrayList<Tile>> map;
     protected boolean isAimed = false, isSpawned, isMultipleShot;
     
     public Ennemie(){
@@ -199,22 +200,23 @@ public abstract class Ennemie extends Thread implements Shootable{
     }
     
     private void chooseDirection(){
-        if((getBlockType(0, 1) == 2 || getBlockType(0, 1) == 4) && dir != "up") // down
+        if((getBlockType(0, 1) == "road" || getBlockType(0, 1) == "base") && dir != "up") // down
             dir = "down";
-        else if((getBlockType(-1, 0) == 2 || getBlockType(-1, 0) == 4) && dir != "right") //  left
+        else if((getBlockType(-1, 0) == "road" || getBlockType(-1, 0) == "base") && dir != "right") //  left
             dir = "left";
-        else if((getBlockType(0, -1) == 2 || getBlockType(0, -1) == 4) && dir != "down") // up
+        else if((getBlockType(0, -1) == "road" || getBlockType(0, -1) == "base") && dir != "down") // up
             dir = "up";
-        else if((getBlockType(1, 0) == 2 || getBlockType(1, 0) == 4) && dir != "left") //  right
+        else if((getBlockType(1, 0) == "road" || getBlockType(1, 0) == "base") && dir != "left") //  right
             dir = "right";
         else
             die();
     }
     
-    private int getBlockType(int dx, int dy){
+    private String getBlockType(int dx, int dy){
         int x = (int) Math.floor(this.x/Game.unite), y = (int) Math.floor(this.y/Game.unite);
-        if(x+dx < 0 || x+dx >= map.get(0).size() || y+dy >= map.size() || y+dy < 0) return 0;
-        return map.get(y+dy).get(x+dx);
+        if(x+dx < 0 || x+dx >= map.get(0).size() || y+dy >= map.size() || y+dy < 0)
+            return "wall";
+        return map.get(y+dy).get(x+dx).getType();
     }
     
     public void attack(){

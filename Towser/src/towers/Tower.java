@@ -20,25 +20,27 @@ import org.newdawn.slick.opengl.TextureLoader;
 import towser.Game;
 import towser.Towser;
 import towser.Shootable;
-import ui.Button;
-import ui.Overlay;
+import ui.*;
 
-public abstract class Tower implements Shootable{
+public abstract class Tower extends Tile implements Shootable{
     
     protected int price, power, bulletSpeed, range, life, x, y, id, width;
     protected double lastShoot = 0, shootRate;
     protected Texture sprite = null, preSprite = null, texture;
-    protected float r = 0.7f, g = 0.7f, b = 0.7f;
+    protected float r = 0.7f, g = 0.7f, b = 0.7f, rotation;
     protected String name;
-    protected boolean isPlaced = false, renderIt = true, follow, selected = true, isMultipleShot;
-    protected Ennemie ennemieShooted;
+    protected boolean isPlaced = false, renderIt = true, follow, selected = true, isMultipleShot, canRotate;
+    protected Ennemie enemyAimed;
     protected ArrayList<Bullet> bullets = new ArrayList<Bullet>(), bulletsToRemove = new ArrayList<Bullet>();
     protected Overlay overlay;
     protected ArrayList<Integer> upgradePrices; // order : range, power, shootRate
     
-    public Tower(){
+    public Tower(Texture text, String type){
+        super(text, type);
         x = Mouse.getX();
         y = Towser.windHeight-Mouse.getY();
+        rotation = 0;
+        this.setTower(this);
     }
     
     public String getName(){
@@ -59,6 +61,10 @@ public abstract class Tower implements Shootable{
     
     public double getY(){
         return y;
+    }
+    
+    public float getRotation(){
+        return rotation;
     }
     
     public int getPower(){
@@ -83,7 +89,8 @@ public abstract class Tower implements Shootable{
     
     public void attacked(int power){
         this.life -= power;
-        if(life <= 0) die();
+        if(life <= 0)
+            die();
     }
     
     public ArrayList<Bullet> getBullets(){
@@ -94,37 +101,49 @@ public abstract class Tower implements Shootable{
         return bulletsToRemove;
     }
     
-    public void searchAndShoot(ArrayList<Ennemie> ennemies){
-        if(System.currentTimeMillis()-lastShoot >= 1000/shootRate){
-            int i;
-            ArrayList<Ennemie> ennemiesInRange = new ArrayList<Ennemie>();
-            Ennemie first;
-            if(ennemies != null && !ennemies.isEmpty()){
-                if(getEnnemieShooted() == null){
-                    i = 0;
-                    while(i < ennemies.size()){
-                        if(ennemies.get(i).isSpawned() && ennemies.get(i).isInRangeOf(this)){
-                            ennemiesInRange.add(ennemies.get(i));
-                        }
-                        i++;
-                    }
-                    if(!ennemiesInRange.isEmpty()){
-                        first = ennemiesInRange.get(0);
-                        for(i = 0 ; i < ennemiesInRange.size() ; i++)
-                            if(ennemiesInRange.get(i).getIndiceTuile() > first.getIndiceTuile()) first = ennemiesInRange.get(i);
-                        aim(first);
-                    }
-                }
-                else if(!getEnnemieShooted().isDead() && getEnnemieShooted().isInRangeOf(this)) shoot();
-                else aim(null);
+    public void searchAndShoot(ArrayList<Ennemie> enemies){
+        int i;
+        ArrayList<Ennemie> enemiesInRange = new ArrayList<Ennemie>();
+        Ennemie first;
+        if(enemies != null && !enemies.isEmpty()){
+            i = 0;
+            while(i < enemies.size()){
+                if(enemies.get(i).isSpawned() && enemies.get(i).isInRangeOf(this))
+                    enemiesInRange.add(enemies.get(i));
+                i++;
             }
+            if(!enemiesInRange.isEmpty()){
+                first = enemiesInRange.get(0);
+                for(i = 0 ; i < enemiesInRange.size() ; i++)
+                    if(enemiesInRange.get(i).getIndiceTuile() > first.getIndiceTuile())
+                        first = enemiesInRange.get(i);
+                aim(first);
+            }
+            else
+                aim(null);
         }
+        else
+            aim(null);
+        if(enemyAimed != null && !enemyAimed.isDead() && enemyAimed.isInRangeOf(this) && canShoot())
+            shoot();
     }
     
     public void aim(Ennemie e){
-        if(e == null && ennemieShooted != null) ennemieShooted.setIsAimed(false);
-        ennemieShooted = e;
-        if(e != null) e.setIsAimed(true);
+        if(e == null && enemyAimed != null)
+            enemyAimed.setIsAimed(false);
+        enemyAimed = e;
+        if(e != null){
+            e.setIsAimed(true);
+            if(canRotate){
+                double xDiff, yDiff, angle;
+                xDiff = enemyAimed.getX()-x;
+                yDiff = enemyAimed.getY()-y;
+                angle = Math.atan2(yDiff, xDiff);
+                cos = Math.cos(angle);
+                sin = Math.sin(angle);
+                System.out.println("cos : " + cos + "       sin : " + sin);
+            }
+        }   
     }
     
     public void setFollow(boolean b){
@@ -136,9 +155,13 @@ public abstract class Tower implements Shootable{
         return follow;
     }
     
+    public boolean canShoot(){
+        return (System.currentTimeMillis()-lastShoot >= 1000/shootRate);
+    }
+    
     public void shoot(){
         lastShoot = System.currentTimeMillis();
-        Bullet b = new Bullet(this, ennemieShooted, 5, 0.9f, 0.1f, 0.1f);
+        Bullet b = new Bullet(this, enemyAimed, 5, 0.9f, 0.1f, 0.1f);
         bullets.add(b);
     }
     
@@ -154,8 +177,8 @@ public abstract class Tower implements Shootable{
             bullets.get(i).render();
     }
     
-    public Ennemie getEnnemieShooted(){
-        return ennemieShooted;
+    public Ennemie getEnemyAimed(){
+        return enemyAimed;
     }
     
     public int getWidth(){
@@ -179,10 +202,10 @@ public abstract class Tower implements Shootable{
         y -= Mouse.getDY();
     }
     
-    public void place(ArrayList<ArrayList<Integer>> map){
+    public void place(ArrayList<ArrayList<Tile>> map){
         x = Math.floorDiv(x, Game.unite);
         y = Math.floorDiv(y, Game.unite);
-        map.get(y).set(x, id);
+        map.get(y).set(x, this);
         x = x*Game.unite+Game.unite/2;
         y = y*Game.unite+Game.unite/2;
         isPlaced = true;
@@ -198,7 +221,7 @@ public abstract class Tower implements Shootable{
     public boolean canBePlaced(){
         boolean bool = false;
         renderIt = false;
-        if(isInWindow() && Game.getMap().get(Math.floorDiv(y, Game.unite)).get(Math.floorDiv(x, Game.unite)) == 1){ // middle point
+        if(isInWindow() && Game.getMap().get(Math.floorDiv(y, Game.unite)).get(Math.floorDiv(x, Game.unite)).getType() == "grass"){ // middle point
             bool = true;
             renderIt = true;
         }
