@@ -1,43 +1,41 @@
 package ui;
 
+import java.util.ArrayList;
 import org.newdawn.slick.opengl.Texture;
 import towers.*;
 import towser.Towser;
 
 public class Tile {
     
-    protected Texture texture;
     protected Tower tower;
     protected float r, g, b;
-    protected double cos = 0, sin = 0;
+    protected double angle = 0, newAngle = 0;
     protected String type;
-    protected Tile backgroundTile;
+    protected ArrayList<Texture> textures;
+    
+    public Tile(ArrayList<Texture> textures, String t){
+        this.textures = textures;
+        tower = null;
+        type = t;
+    }
     
     public Tile(Texture text, String t){
-        texture = text;
+        textures = new ArrayList<Texture>();
+        textures.add(text);
         tower = null;
         type = t;
     }
     
     public Tile(float r, float g, float b, String t){
-        texture = null;
         tower = null;
         this.r = r;
         this.g = g;
         this.b = b;
         type = t;
     }
-    
-    public double getCos(){
-        return cos;
-    }
-    
-    public double getSin(){
-        return sin;
-    }
-    
-    public Texture getTexture(){
-        return texture;
+
+    public ArrayList<Texture> getTextures(){
+        return textures;
     }
     
     public String getType(){
@@ -46,6 +44,10 @@ public class Tile {
     
     public Tower getTower(){
         return tower;
+    }
+    
+    public double getAngle(){
+        return angle;
     }
     
     public float getR(){
@@ -62,10 +64,5 @@ public class Tile {
     
     protected void setTower(Tower t){
         tower = t;
-        backgroundTile = new Tile(Towser.grass, "grass");
-    }
-    
-    public Tile getBackgroundTile(){
-        return backgroundTile;
     }
 }

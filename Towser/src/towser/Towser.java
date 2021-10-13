@@ -43,7 +43,7 @@ public class Towser{
     public static int windWidth = 1000, windHeight = 800; // Width and Height divisible by unite in Game.java
     public static Menu menu;
     public static Game game;
-    public static Texture woodBG, basicTower, wall, road, grass, woodDisplay, circleTower, house;
+    public static Texture woodBG, wall, road, grass, woodDisplay, basicTower, basicTowerBase, basicTowerTurret, circleTower;
     public static UnicodeFont normal, astres, life, normalL, price;
     public static DecimalFormat formatter = new DecimalFormat("#.##");
     
@@ -158,6 +158,8 @@ public class Towser{
             grass = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/grass.png")));
             // Towers
             basicTower = TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/basic_tower.png")));
+            basicTowerBase = TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/basic_tower_base.png")));
+            basicTowerTurret = TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/basic_tower_turret.png")));
             circleTower = TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/circle_tower.png")));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Towser.class.getName()).log(Level.SEVERE, null, ex);

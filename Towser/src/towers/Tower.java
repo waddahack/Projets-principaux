@@ -27,7 +27,7 @@ public abstract class Tower extends Tile implements Shootable{
     protected int price, power, bulletSpeed, range, life, x, y, id, width;
     protected double lastShoot = 0, shootRate;
     protected Texture sprite = null, preSprite = null, texture;
-    protected float r = 0.7f, g = 0.7f, b = 0.7f, rotation;
+    protected float r = 0.7f, g = 0.7f, b = 0.7f;
     protected String name;
     protected boolean isPlaced = false, renderIt = true, follow, selected = true, isMultipleShot, canRotate;
     protected Ennemie enemyAimed;
@@ -39,7 +39,13 @@ public abstract class Tower extends Tile implements Shootable{
         super(text, type);
         x = Mouse.getX();
         y = Towser.windHeight-Mouse.getY();
-        rotation = 0;
+        this.setTower(this);
+    }
+    
+    public Tower(ArrayList<Texture> textures, String type){
+        super(textures, type);
+        x = Mouse.getX();
+        y = Towser.windHeight-Mouse.getY();
         this.setTower(this);
     }
     
@@ -61,10 +67,6 @@ public abstract class Tower extends Tile implements Shootable{
     
     public double getY(){
         return y;
-    }
-    
-    public float getRotation(){
-        return rotation;
     }
     
     public int getPower(){
@@ -135,13 +137,15 @@ public abstract class Tower extends Tile implements Shootable{
         if(e != null){
             e.setIsAimed(true);
             if(canRotate){
-                double xDiff, yDiff, angle;
-                xDiff = enemyAimed.getX()-x;
-                yDiff = enemyAimed.getY()-y;
-                angle = Math.atan2(yDiff, xDiff);
-                cos = Math.cos(angle);
-                sin = Math.sin(angle);
-                System.out.println("cos : " + cos + "       sin : " + sin);
+                double t = 0.3;
+                newAngle = Math.toDegrees(Math.atan2(enemyAimed.getY()-y, enemyAimed.getX()-x));
+                if(newAngle-angle > 180)
+                    newAngle -= 360;
+                else if(angle-newAngle > 180)
+                    newAngle += 360;
+                angle = (1-t)*angle + t*newAngle;
+                angle = Math.round(angle*100)/100;
+                newAngle = Math.round(newAngle*100)/100;
             }
         }   
     }
@@ -156,7 +160,7 @@ public abstract class Tower extends Tile implements Shootable{
     }
     
     public boolean canShoot(){
-        return (System.currentTimeMillis()-lastShoot >= 1000/shootRate);
+        return (System.currentTimeMillis()-lastShoot >= 1000/shootRate && angle >= newAngle-3 && angle <= newAngle+3);
     }
     
     public void shoot(){

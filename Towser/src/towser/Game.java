@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
 import org.newdawn.slick.opengl.Texture;
 import static towser.Towser.windHeight;
 import static towser.Towser.windWidth;
@@ -37,7 +38,6 @@ public class Game {
     private static ArrayList<Ennemie> ennemies, ennemiesDead;
     private boolean towerSelected = false, inWave = false, renderOverlay = false, dontPlace = false;
     private ArrayList<Wave> waves;
-    private Texture currentText = null;
     private ArrayList<Overlay> overlays;
     
     public Game(int lvl){
@@ -105,11 +105,9 @@ public class Game {
     public void render(){
         int i, j;
         Ennemie e;
-        currentText = null;
         for(i = 0 ; i < mapH ; i++){
-            for(j = 0 ; j < mapW ; j++){
+            for(j = 0 ; j < mapW ; j++)
                 createBlock(j*unite, i*unite, map.get(i).get(j));
-            }
         }
         for(i = 0 ; i < ennemies.size() ; i++){
             e = ennemies.get(i);
@@ -198,27 +196,46 @@ public class Game {
     
     private void createBlock(int x, int y, Tile tile){
         float r = 100, g = r, b = r;
-        float xRot = 0, yRot = 0;
-        Texture t = tile.getTexture();
-        if(t == null){ // Si pas de text
+        ArrayList<Texture> listeText = tile.getTextures();
+        
+        if(listeText == null || listeText.isEmpty()){ // Si pas de text
             r = tile.getR();
             g = tile.getG();
             b = tile.getB();
+            draw(x, y, r, g, b);
         }
-        else if(tile.getTower() == null){ // si c'est pas une tower
-            currentText = t;
-            t.bind();
-        }
-        
-        else{ // Si c'est une tower
-            createBlock(x, y, tile.getBackgroundTile());
-            xRot = (float)(tile.getCos() * unite);
-            yRot = (float)(tile.getSin() * unite);
-            t.bind();
-            currentText = t;
-        }
+        else{
+            for(int i = 0 ; i < listeText.size()-1 ; i++)
+                draw(x, y, listeText.get(i));
 
+            draw(x, y, listeText.get(listeText.size()-1), tile.getAngle());
+        }
+    }
+    
+    private void draw(int x, int y, float r, float g, float b){
+        draw(x, y, null, 0, r, g, b);
+    }
+    
+    private void draw(int x, int y, Texture t){
+        draw(x, y, t, 0, 0, 0, 0);
+    }
+    
+    private void draw(int x, int y, float r, float g, float b, double angle){
+        draw(x, y, null, angle, r, g, b);
+    }
+    
+    private void draw(int x, int y, Texture t, double angle){
+        draw(x, y, t, angle, 0, 0, 0);
+    }
+    
+    private void draw(int x, int y, Texture t, double angle, float r, float g, float b){
+        glPushMatrix(); //Save the current matrix.
+        glTranslatef((x + unite/2), (y + unite/2), 0);
+        if(angle != 0)
+            glRotated(angle, 0, 0, 1);
+        
         if(t != null){
+            t.bind();
             glEnable(GL_TEXTURE_2D);
             glColor3f(1, 1, 1);
         }
@@ -227,17 +244,19 @@ public class Game {
         
         glBegin(GL_QUADS);
             glTexCoord2f(0, 0);
-            glVertex2f(x + xRot, y + yRot);
+            glVertex2d(-unite/2, -unite/2);
             glTexCoord2f(1, 0);
-            glVertex2f(x+unite + xRot, y + yRot);
+            glVertex2d(unite/2, -unite/2);
             glTexCoord2f(1, 1);
-            glVertex2f(x+unite + xRot, y+unite + yRot);
+            glVertex2d(unite/2, unite/2);
             glTexCoord2f(0, 1);
-            glVertex2f(x + xRot, y+unite + yRot);
+            glVertex2d(-unite/2, unite/2);
         glEnd();
-
+        
         if(t != null)
-            glDisable(GL_TEXTURE_2D);
+            glDisable(GL_TEXTURE_2D);  
+        
+        glPopMatrix(); // Reset the current matrix to the one that was saved.
     }
     
     private void initOverlays(){

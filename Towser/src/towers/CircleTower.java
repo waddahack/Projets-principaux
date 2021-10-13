@@ -1,6 +1,7 @@
 package towers;
 
 import java.util.ArrayList;
+import org.newdawn.slick.opengl.Texture;
 import towser.Game;
 import towser.Towser;
 import ui.Button;

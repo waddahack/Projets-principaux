@@ -14,6 +14,7 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glRectf;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2i;
+import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import towser.*;
 import ui.*;
@@ -23,7 +24,10 @@ public class BasicTower extends Tower{
     public static int priceP = 200;
     
     public BasicTower() {
-        super(Towser.basicTower, "basicTower");
+        super(new ArrayList<Texture>(), "basicTower");
+        textures.add(Towser.grass);
+        textures.add(Towser.basicTowerBase);
+        textures.add(Towser.basicTowerTurret);
         canRotate = true;
         price = priceP;
         power = 15;
