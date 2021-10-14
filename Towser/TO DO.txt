@@ -1,0 +1,12 @@
+TILES :
+
+- Faire une tile par plante
+- Sans plante = fond verd only
+
+LEVELS :
+
+- Plantes et buissons placés aléatoirement (avec un taux, grass > plants > bush, et avec une rotation 90*k au pif)
+
+SPRITES :
+
+- Faire un ou deux buissons

@@ -47,7 +47,7 @@ public class Game {
         ennemies = new ArrayList<Ennemie>();
         ennemiesDead = new ArrayList<Ennemie>();
         life = 100;
-        money = 200;
+        money = 2000;
         /*stone = 50;
         wood = 50;
         gold = 0;
@@ -144,20 +144,23 @@ public class Game {
               int data = myReader.nextInt();
               switch(data){
                   case 0:
-                      row.add(new Tile(Towser.wall, "wall"));
+                      row.add(new Tile(Towser.lawn, "grass"));
                       break;
                   case 1:
                       row.add(new Tile(Towser.grass, "grass"));
                       break;
                   case 2:
-                      row.add(new Tile(Towser.road, "road"));
+                      row.add(new Tile(Towser.plants, "grass"));
                       break;
                   case 3:
+                      row.add(new Tile(Towser.road, "road"));
+                      break;
+                  case 4:
                       row.add(new Tile(0.9f, 0.1f, 0.1f, "spawn"));
                       spawn.add(x);
                       spawn.add(y);
                       break;
-                  case 4:
+                  case 5:
                       row.add(new Tile(0.1f, 0.1f, 0.9f, "base"));
                       base.add(x);
                       base.add(y);

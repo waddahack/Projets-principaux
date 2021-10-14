@@ -225,11 +225,10 @@ public abstract class Tower extends Tile implements Shootable{
     
     public boolean canBePlaced(){
         boolean bool = false;
-        renderIt = false;
-        if(isInWindow() && Game.getMap().get(Math.floorDiv(y, Game.unite)).get(Math.floorDiv(x, Game.unite)).getType() == "grass"){ // middle point
+        String tileType = Game.getMap().get(Math.floorDiv(y, Game.unite)).get(Math.floorDiv(x, Game.unite)).getType(); // middle point
+        if(isInWindow() && tileType == "grass")
             bool = true;
-            renderIt = true;
-        }
+        renderIt = bool;
         return bool;
     }
     
