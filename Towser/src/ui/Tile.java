@@ -13,12 +13,6 @@ public class Tile {
     protected String type;
     protected ArrayList<Texture> textures;
     
-    public Tile(ArrayList<Texture> textures, String t){
-        this.textures = textures;
-        tower = null;
-        type = t;
-    }
-    
     public Tile(Texture text, String t){
         textures = new ArrayList<Texture>();
         textures.add(text);

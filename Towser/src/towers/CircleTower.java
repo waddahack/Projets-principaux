@@ -12,7 +12,8 @@ public class CircleTower extends Tower{
     public static int priceP = 350;
     
     public CircleTower(){
-        super(Towser.circleTower, "circleTower");
+        super(Towser.grass, "circleTower");
+        textures.add(Towser.circleTower);
         canRotate = false;
         price = priceP;
         power = 10;

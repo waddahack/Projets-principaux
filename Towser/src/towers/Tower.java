@@ -42,13 +42,6 @@ public abstract class Tower extends Tile implements Shootable{
         this.setTower(this);
     }
     
-    public Tower(ArrayList<Texture> textures, String type){
-        super(textures, type);
-        x = Mouse.getX();
-        y = Towser.windHeight-Mouse.getY();
-        this.setTower(this);
-    }
-    
     public String getName(){
         return name;
     }
@@ -139,13 +132,21 @@ public abstract class Tower extends Tile implements Shootable{
             if(canRotate){
                 double t = 0.3;
                 newAngle = Math.toDegrees(Math.atan2(enemyAimed.getY()-y, enemyAimed.getX()-x));
+                
                 if(newAngle-angle > 180)
                     newAngle -= 360;
                 else if(angle-newAngle > 180)
                     newAngle += 360;
+                
                 angle = (1-t)*angle + t*newAngle;
-                angle = Math.round(angle*100)/100;
-                newAngle = Math.round(newAngle*100)/100;
+                
+                if(angle >= 360)
+                    angle -= 360;
+                else if(angle <= -360)
+                    angle += 360;
+                
+                angle = Math.round(angle);
+                newAngle = Math.round(newAngle);
             }
         }   
     }
@@ -160,7 +161,7 @@ public abstract class Tower extends Tile implements Shootable{
     }
     
     public boolean canShoot(){
-        return (System.currentTimeMillis()-lastShoot >= 1000/shootRate && angle >= newAngle-3 && angle <= newAngle+3);
+        return (System.currentTimeMillis()-lastShoot >= 1000/shootRate && angle >= newAngle-4 && angle <= newAngle+4);
     }
     
     public void shoot(){

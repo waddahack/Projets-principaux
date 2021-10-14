@@ -24,8 +24,7 @@ public class BasicTower extends Tower{
     public static int priceP = 200;
     
     public BasicTower() {
-        super(new ArrayList<Texture>(), "basicTower");
-        textures.add(Towser.grass);
+        super(Towser.grass, "basicTower");
         textures.add(Towser.basicTowerBase);
         textures.add(Towser.basicTowerTurret);
         canRotate = true;
