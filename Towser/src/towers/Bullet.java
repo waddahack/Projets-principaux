@@ -31,7 +31,7 @@ public class Bullet{
         this.shooter = shooter;
     }
     
-    public Bullet(Shootable shooter, int xDest, int yDest, int radius, float r, float g, float b){
+    public Bullet(Shootable shooter, double xDest, double yDest, int radius, float r, float g, float b){
         this.x = shooter.getX();
         this.y = shooter.getY();
         this.radius = radius;

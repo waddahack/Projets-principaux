@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,30 +32,155 @@ import ui.*;
 public class Game {
     
     private static ArrayList<ArrayList<Tile>> map;
-    private static ArrayList<Integer> spawn, base;
-    public static int unite = 50, money,/* stone, coal, gold, wood, */life, waveNumber, waveReward;
+    private static Tile spawn, base;
+    public static int unite = 50, money, life, waveNumber, waveReward;
     private int mapW = windWidth/unite, mapH = windHeight/unite;
     private static ArrayList<Tower> towers, towersDestroyed;
     private static ArrayList<Ennemie> ennemies, ennemiesDead;
+    private static ArrayList<Tile> path;
     private boolean towerSelected = false, inWave = false, renderOverlay = false, dontPlace = false;
     private ArrayList<Wave> waves;
     private ArrayList<Overlay> overlays;
     
     public Game(int lvl){
         readFile("levels/level_"+lvl+".txt");
+        searchPath();
+        fixRoadSprites();
         towers = new ArrayList<Tower>();
         towersDestroyed = new ArrayList<Tower>();
         ennemies = new ArrayList<Ennemie>();
         ennemiesDead = new ArrayList<Ennemie>();
         life = 100;
         money = 2000;
-        /*stone = 50;
-        wood = 50;
-        gold = 0;
-        coal = 0;*/
         waveNumber = 1;
         waveReward = 150;
         initOverlays();
+    }
+    
+    private void readFile(String filePath){
+        map = new ArrayList<ArrayList<Tile>>();
+        try{
+            File file = new File(filePath);
+            Scanner myReader = new Scanner(file);
+            ArrayList<Tile> row = new ArrayList<Tile>();
+            int i = 0, j = 0, n;
+            Texture t;
+            Random rand = new Random();
+            String data;
+            Tile tile;
+            while(myReader.hasNext()){
+              data = myReader.next();
+              switch(data){
+                  case "0":
+                      n = rand.nextInt(100)+1;
+                      if(n > 93)
+                          t = Towser.getTexture("bigPlant1");
+                      else if(n > 86)
+                          t = Towser.getTexture("bigPlant2");
+                      else
+                          t = Towser.getTexture("grass");
+                      n = 0;
+                      if(t != Towser.getTexture("grass"))
+                          n = Math.round(rand.nextInt(361)/90)*90;
+                      tile = new Tile(t, "grass");
+                      tile.setAngle(n);
+                      break;
+                  case "o":
+                      tile = new Tile(Towser.getTexture("roadStraight"), "road");
+                      break;
+                  case "S":
+                      tile = new Tile(0.9f, 0.1f, 0.1f, "spawn");
+                      spawn = tile;
+                      break;
+                  case "B":
+                      tile = new Tile(0.1f, 0.1f, 0.9f, "base");
+                      base = tile;
+                      break;
+                  default:
+                      tile = new Tile(0.0f, 0.0f, 0.0f, "void");
+                      break;
+              }
+              tile.setX(j*unite);
+              tile.setY(i*unite);
+              row.add(tile);
+              
+              if(row.size() == mapW){
+                  map.add(row);
+                  row = new ArrayList<Tile>();
+                  j = 0;
+                  i++;
+              }
+              else
+                  j++;
+              if(map.size() == mapH)
+                  break;
+            }
+            myReader.close();
+        }
+        catch (FileNotFoundException e){
+            System.out.println("File : "+path+" doesn't exist.");
+            e.printStackTrace();
+        }
+    }
+    
+    private void searchPath(){
+        path = new ArrayList<Tile>();
+        Tile tile = spawn;
+        int i = Math.floorDiv((int)spawn.getY(), unite), j = Math.floorDiv((int)spawn.getX(), unite);
+        while(tile != base){
+            if(i < map.size()-1 && map.get(i+1).get(j).getType() == "road" && !path.contains(map.get(i+1).get(j))) // check en bas
+                tile = map.get(i+1).get(j);
+            else if(j < map.get(i).size()-1 && map.get(i).get(j+1).getType() == "road" && !path.contains(map.get(i).get(j+1))) // check à droite
+                tile = map.get(i).get(j+1);
+            else if(j > 0 && map.get(i).get(j-1).getType() == "road" && !path.contains(map.get(i).get(j-1))) // check à gauche
+                tile = map.get(i).get(j-1);
+            else if(i > 0 && map.get(i-1).get(j).getType() == "road" && !path.contains(map.get(i-1).get(j))) // check en haut
+                tile = map.get(i-1).get(j);
+            else // sinon c'est la base
+                tile = base;
+            if(tile != base)
+                path.add(tile);
+            i = Math.floorDiv((int)tile.getY(), unite);
+            j = Math.floorDiv((int)tile.getX(), unite);
+        }
+    }
+    
+    private void fixRoadSprites(){
+        // Fix road sprites connections
+        Tile road, nextRoad = null, previousRoad = null;
+        for(int i = 0 ; i < path.size() ; i++){
+            if(i > 0)
+                previousRoad = path.get(i-1);
+            else
+                previousRoad = spawn;
+            road = path.get(i);
+            if(i < path.size()-1)
+                nextRoad = path.get(i+1);
+            else
+                nextRoad = base;
+
+            // Si previousRoad est à GAUCHE et nextRoad est en BAS ou l'inverse
+            if((previousRoad.getX()+unite/2 < road.getX() && nextRoad.getY()+unite/2 > road.getY()+unite) || (nextRoad.getX()+unite/2 < road.getX() && previousRoad.getY()+unite/2 > road.getY()+unite)){
+                    road.setTexture(Towser.getTexture("roadTurn"));
+                    road.setAngle(180);
+            }
+            // Si previousRoad est à GAUCHE et nextRoad est en HAUT ou l'inverse
+            else if((previousRoad.getX()+unite/2 < road.getX() && nextRoad.getY()+unite/2 < road.getY()) || (nextRoad.getX()+unite/2 < road.getX() && previousRoad.getY()+unite/2 < road.getY())){
+                road.setTexture(Towser.getTexture("roadTurn"));
+                    road.setAngle(270);
+            }
+            // Si previousRoad est à DROITE et nextRoad est en BAS ou l'inverse
+            else if((previousRoad.getX()+unite/2 > road.getX()+unite && nextRoad.getY()+unite/2 > road.getY()+unite) || (nextRoad.getX()+unite/2 > road.getX()+unite && previousRoad.getY()+unite/2 > road.getY()+unite)){
+                road.setTexture(Towser.getTexture("roadTurn"));
+                road.setAngle(90);
+            }
+            // Si previousRoad est à DROITE et nextRoad est en HAUT ou l'inverse
+            else if((previousRoad.getX()+unite/2 > road.getX()+unite && nextRoad.getY()+unite/2 < road.getY()) || (nextRoad.getX()+unite/2 > road.getX()+unite && previousRoad.getY()+unite/2 < road.getY()))
+                road.setTexture(Towser.getTexture("roadTurn"));
+            // Si previousRoad est à DROITE et nextRoad est à GAUCHE ou l'inverse
+            else if((previousRoad.getX()+unite/2 > road.getX()+unite && nextRoad.getX()+unite/2 < road.getX()) || (nextRoad.getX()+unite/2 > road.getX()+unite && previousRoad.getX()+unite/2 < road.getX()))
+                    road.setAngle(90);
+        }
     }
     
     public void checkInput(){
@@ -129,62 +255,6 @@ public class Game {
                 break;
             }
         renderOverlays();
-    }
-    
-    private void readFile(String path){
-        map = new ArrayList<ArrayList<Tile>>();
-        spawn = new ArrayList<Integer>();
-        base = new ArrayList<Integer>();
-        try{
-            File file = new File(path);
-            Scanner myReader = new Scanner(file);
-            ArrayList<Tile> row = new ArrayList<Tile>();
-            int x = 0, y = 0;
-            while(myReader.hasNextInt()){
-              int data = myReader.nextInt();
-              switch(data){
-                  case 0:
-                      row.add(new Tile(Towser.lawn, "grass"));
-                      break;
-                  case 1:
-                      row.add(new Tile(Towser.grass, "grass"));
-                      break;
-                  case 2:
-                      row.add(new Tile(Towser.plants, "grass"));
-                      break;
-                  case 3:
-                      row.add(new Tile(Towser.road, "road"));
-                      break;
-                  case 4:
-                      row.add(new Tile(0.9f, 0.1f, 0.1f, "spawn"));
-                      spawn.add(x);
-                      spawn.add(y);
-                      break;
-                  case 5:
-                      row.add(new Tile(0.1f, 0.1f, 0.9f, "base"));
-                      base.add(x);
-                      base.add(y);
-                      break;
-                  default:
-                      row.add(new Tile(0.0f, 0.0f, 0.0f, "void"));
-                      break;
-              }
-              if(row.size() == mapW){
-                  map.add(row);
-                  row = new ArrayList<Tile>();
-                  x = 0;
-                  y++;
-              }
-              else
-                  x++;
-              if(map.size() == mapH)
-                  break;
-            }
-            myReader.close();
-        }catch (FileNotFoundException e){
-            System.out.println("File : "+path+" doesn't exist.");
-            e.printStackTrace();
-        }
     }
     
     private void clearArrays(){
@@ -270,9 +340,9 @@ public class Game {
         o.addButton(0, 25, 50, 30, "brown", ">>");
         o.setMargin(Game.unite);
         o.addButton(o.getMargin(), o.getMargin()*2, Game.unite, Game.unite, "blue", null);
-        o.getButtons().get(1).setBG(Towser.basicTower);
+        o.getButtons().get(1).setBG(Towser.getTexture("basicTower"));
         o.addButton(o.getMargin()*3, o.getMargin()*2, Game.unite, Game.unite, "blue", null);
-        o.getButtons().get(2).setBG(Towser.circleTower);
+        o.getButtons().get(2).setBG(Towser.getTexture("circleTower"));
         overlays.add(o);
         
         o = new Overlay(0, 0, Towser.windWidth, unite);
@@ -426,11 +496,15 @@ public class Game {
         return map;
     }
     
-    public static ArrayList<Integer> getSpawn(){
+    public static ArrayList<Tile> getPath(){
+        return path;
+    }
+    
+    public static Tile getSpawn(){
         return spawn;
     }
     
-    public static ArrayList<Integer> getBase(){
+    public static Tile getBase(){
         return base;
     }
     

@@ -12,7 +12,7 @@ import towser.Towser;
 public class Overlay {
     
     private int x, y, width, height, margin = 20;
-    private Texture bg = Towser.woodDisplay;
+    private Texture bg = Towser.getTexture("woodDisplay");
     private ArrayList<Button> buttons = new ArrayList<Button>();
     private ArrayList<Integer> texturesX = new ArrayList<Integer>(), texturesY = new ArrayList<Integer>(), texturesW = new ArrayList<Integer>(), texturesH = new ArrayList<Integer>();
     private ArrayList<Texture> textures = new ArrayList<Texture>();

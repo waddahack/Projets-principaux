@@ -22,13 +22,13 @@ import ui.Tile;
 
 public abstract class Ennemie extends Thread implements Shootable{
     
-    protected int reward, power, shootRate, range, life, xBase, yBase, id, width, indiceTuile = 0;
+    protected int reward, power, shootRate, range, life, id, width, indiceTuile = 0;
     protected Texture sprite = null;
     protected float r, g, b, moveSpeed;
     protected long stopFor = 0;
     protected String name;
-    protected double x, y, speedRatio;
-    protected ArrayList<Integer> spawn, base;
+    protected double x, y, xBase, yBase, speedRatio;
+    protected Tile spawn, base;
     protected String dir;
     protected ArrayList<ArrayList<Tile>> map;
     protected boolean isAimed = false, isSpawned, isMultipleShot;
@@ -37,13 +37,13 @@ public abstract class Ennemie extends Thread implements Shootable{
         spawn = Game.getSpawn();
         base = Game.getBase();
         map = Game.getMap();
-        if(!spawn.isEmpty()){
-            x = spawn.get(0)*Game.unite+Game.unite/2;
-            y = spawn.get(1)*Game.unite+Game.unite/2;
+        if(spawn != null){
+            x = spawn.getX()+Game.unite/2;
+            y = spawn.getY()+Game.unite/2;
         }
-        if(!base.isEmpty()){
-            xBase = base.get(0)*Game.unite+Game.unite/2;
-            yBase = base.get(1)*Game.unite+Game.unite/2;
+        if(base != null){
+            xBase = base.getX()+Game.unite/2;
+            yBase = base.getY()+Game.unite/2;
         }
     }
     
@@ -178,7 +178,8 @@ public abstract class Ennemie extends Thread implements Shootable{
     }
     
     private void move(){
-        if(isInBase()) attack();
+        if(isInBase())
+            attack();
         if((x%Game.unite == Game.unite/2 && y%Game.unite == Game.unite/2)){
             chooseDirection();
             indiceTuile += 1;
@@ -200,23 +201,24 @@ public abstract class Ennemie extends Thread implements Shootable{
     }
     
     private void chooseDirection(){
-        if((getBlockType(0, 1) == "road" || getBlockType(0, 1) == "base") && dir != "up") // down
+        if(canMoveThrough(0, 1) && dir != "up") // down
             dir = "down";
-        else if((getBlockType(-1, 0) == "road" || getBlockType(-1, 0) == "base") && dir != "right") //  left
+        else if(canMoveThrough(-1, 0) && dir != "right") //  left
             dir = "left";
-        else if((getBlockType(0, -1) == "road" || getBlockType(0, -1) == "base") && dir != "down") // up
+        else if(canMoveThrough(0, -1) && dir != "down") // up
             dir = "up";
-        else if((getBlockType(1, 0) == "road" || getBlockType(1, 0) == "base") && dir != "left") //  right
+        else if(canMoveThrough(1, 0) && dir != "left") //  right
             dir = "right";
         else
             die();
     }
     
-    private String getBlockType(int dx, int dy){
+    private boolean canMoveThrough(int dx, int dy){
         int x = (int) Math.floor(this.x/Game.unite), y = (int) Math.floor(this.y/Game.unite);
         if(x+dx < 0 || x+dx >= map.get(0).size() || y+dy >= map.size() || y+dy < 0)
-            return "wall";
-        return map.get(y+dy).get(x+dx).getType();
+            return false;
+        String tileType = map.get(y+dy).get(x+dx).getType();
+        return (tileType == "road" || tileType == "base");
     }
     
     public void attack(){

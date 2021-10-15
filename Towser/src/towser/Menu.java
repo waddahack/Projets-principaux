@@ -17,7 +17,6 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import static towser.Towser.windHeight;
 import static towser.Towser.windWidth;
-import static towser.Towser.woodBG;
 import ui.Overlay;
 
 
@@ -50,7 +49,7 @@ public class Menu {
     public void render(){
         glEnable(GL_TEXTURE_2D);
         glColor3f(1, 1, 1);
-        Towser.woodBG.bind();
+        Towser.getTexture("woodBG").bind();
         glBegin(GL_QUADS);
             glTexCoord2f(0, 0);
             glVertex2i(0, 0);

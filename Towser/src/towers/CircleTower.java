@@ -12,18 +12,17 @@ public class CircleTower extends Tower{
     public static int priceP = 350;
     
     public CircleTower(){
-        super(Towser.lawn, "circleTower");
-        textures.add(Towser.circleTower);
+        super(Towser.getTexture("grass"), "circleTower");
+        textures.add(Towser.getTexture("circleTower"));
         canRotate = false;
         price = priceP;
         power = 10;
         shootRate = 0.3;
         range = (int) (1.2*Game.unite);
         life = 100;
-        name = "Tour circulaire";
-        id = 11;
-        bulletSpeed = 8;
         width = Game.unite;
+        name = "Tour circulaire";
+        bulletSpeed = 8;
         follow = false;
         isMultipleShot = true;
         upgradePrices = new ArrayList<Integer>();

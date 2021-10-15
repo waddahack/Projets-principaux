@@ -24,19 +24,18 @@ public class BasicTower extends Tower{
     public static int priceP = 200;
     
     public BasicTower() {
-        super(Towser.lawn, "basicTower");
-        textures.add(Towser.basicTowerBase);
-        textures.add(Towser.basicTowerTurret);
+        super(Towser.getTexture("grass"), "basicTower");
+        textures.add(Towser.getTexture("basicTowerBase"));
+        textures.add(Towser.getTexture("basicTowerTurret"));
         canRotate = true;
         price = priceP;
         power = 15;
         shootRate = 0.5f;
         range = 3*Game.unite;
         life = 100;
-        name = "Tour simple";
-        id = 10;
-        bulletSpeed = 6;
         width = Game.unite;
+        name = "Tour simple";
+        bulletSpeed = 6;
         follow = false;
         isMultipleShot = false;
         upgradePrices = new ArrayList<Integer>();

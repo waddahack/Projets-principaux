@@ -24,9 +24,8 @@ import ui.*;
 
 public abstract class Tower extends Tile implements Shootable{
     
-    protected int price, power, bulletSpeed, range, life, x, y, id, width;
+    protected int price, power, bulletSpeed, range, life, width;
     protected double lastShoot = 0, shootRate;
-    protected Texture sprite = null, preSprite = null, texture;
     protected float r = 0.7f, g = 0.7f, b = 0.7f;
     protected String name;
     protected boolean isPlaced = false, renderIt = true, follow, selected = true, isMultipleShot, canRotate;
@@ -37,8 +36,6 @@ public abstract class Tower extends Tile implements Shootable{
     
     public Tower(Texture text, String type){
         super(text, type);
-        x = Mouse.getX();
-        y = Towser.windHeight-Mouse.getY();
         this.setTower(this);
     }
     
@@ -52,14 +49,6 @@ public abstract class Tower extends Tile implements Shootable{
     
     public int getPrice(){
         return price;
-    }
-    
-    public double getX(){
-        return x;
-    }
-    
-    public double getY(){
-        return y;
     }
     
     public int getPower(){
@@ -186,10 +175,6 @@ public abstract class Tower extends Tile implements Shootable{
         return enemyAimed;
     }
     
-    public int getWidth(){
-        return width;
-    }
-    
     public boolean isDead(){
         return (life <= 0);
     }
@@ -201,16 +186,16 @@ public abstract class Tower extends Tile implements Shootable{
     public void render(){
         if(renderIt){
             glColor3f(r, g, b);
-            glRectf(Math.floorDiv(x, Game.unite)*Game.unite, Math.floorDiv(y, Game.unite)*Game.unite, Math.floorDiv(x, Game.unite)*Game.unite+Game.unite, Math.floorDiv(y, Game.unite)*Game.unite+Game.unite);
+            glRectf(Math.floorDiv((int) x, Game.unite)*Game.unite, Math.floorDiv((int) y, Game.unite)*Game.unite, Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite);
         }
         x += Mouse.getDX();
         y -= Mouse.getDY();
     }
     
     public void place(ArrayList<ArrayList<Tile>> map){
-        x = Math.floorDiv(x, Game.unite);
-        y = Math.floorDiv(y, Game.unite);
-        map.get(y).set(x, this);
+        x = Math.floorDiv((int)x, Game.unite);
+        y = Math.floorDiv((int)y, Game.unite);
+        map.get((int) y).set((int) x, this);
         x = x*Game.unite+Game.unite/2;
         y = y*Game.unite+Game.unite/2;
         isPlaced = true;
@@ -225,7 +210,7 @@ public abstract class Tower extends Tile implements Shootable{
     
     public boolean canBePlaced(){
         boolean bool = false;
-        String tileType = Game.getMap().get(Math.floorDiv(y, Game.unite)).get(Math.floorDiv(x, Game.unite)).getType(); // middle point
+        String tileType = Game.getMap().get(Math.floorDiv((int)y, Game.unite)).get(Math.floorDiv((int) x, Game.unite)).getType(); // middle point
         if(isInWindow() && tileType == "grass")
             bool = true;
         renderIt = bool;
@@ -246,7 +231,7 @@ public abstract class Tower extends Tile implements Shootable{
    
     private boolean isMouseIn(){
         int MX = Mouse.getX(), MY = Towser.windHeight-Mouse.getY();
-        return (MX >= x-width/2 && MX <= x+width/2 && MY >= y-width/2 && MY <= y+width/2);
+        return (MX >= x-Game.unite/2 && MX <= x+Game.unite/2 && MY >= y-Game.unite/2 && MY <= y+Game.unite/2);
     }
     
     public boolean isClicked(int but){
@@ -263,7 +248,7 @@ public abstract class Tower extends Tile implements Shootable{
     
     public void renderDetails(){
         if(selected && renderIt){
-            Towser.drawCircle(Math.floorDiv(x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv(y, Game.unite)*Game.unite+Game.unite/2, range, 1, 1, 1);
+            Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range, 1, 1, 1);
             if(isPlaced)
                 renderOverlay();
         }
@@ -277,6 +262,10 @@ public abstract class Tower extends Tile implements Shootable{
     
     public boolean isSelected(){
         return selected;
+    }
+    
+    public int getWidth(){
+        return width;
     }
     
     public Overlay getOverlay(){

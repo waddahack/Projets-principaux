@@ -10,6 +10,8 @@ import java.io.IOException;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
@@ -43,7 +45,7 @@ public class Towser{
     public static int windWidth = 1000, windHeight = 800; // Width and Height divisible by unite in Game.java
     public static Menu menu;
     public static Game game;
-    public static Texture woodBG, wall, road, lawn, grass, plants, woodDisplay, basicTower, basicTowerBase, basicTowerTurret, circleTower;
+    private static Map<String, Texture> textures;
     public static UnicodeFont normal, astres, life, normalL, price;
     public static DecimalFormat formatter = new DecimalFormat("#.##");
     
@@ -151,18 +153,20 @@ public class Towser{
     
     private static void initTextures() {
         try {
-            woodBG = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/wood.png")));
-            woodDisplay = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/wood_display.png")));
-            wall = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/wall.png")));
-            road = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/road.png")));
-            lawn = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/lawn.png")));
-            grass = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/grass.png")));
-            plants = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/plants.png")));
+            textures = new HashMap<String, Texture>();
+            textures.put("woodBG", TextureLoader.getTexture("PNG", new FileInputStream(new File("images/wood.png"))));
+            textures.put("woodDisplay", TextureLoader.getTexture("PNG", new FileInputStream(new File("images/wood_display.png"))));
+            textures.put("rocks", TextureLoader.getTexture("PNG", new FileInputStream(new File("images/rocks.png"))));
+            textures.put("roadStraight", TextureLoader.getTexture("PNG", new FileInputStream(new File("images/road_straight.png"))));
+            textures.put("roadTurn", TextureLoader.getTexture("PNG", new FileInputStream(new File("images/road_turn.png"))));
+            textures.put("grass", TextureLoader.getTexture("PNG", new FileInputStream(new File("images/grass.png"))));
+            textures.put("bigPlant1", TextureLoader.getTexture("PNG", new FileInputStream(new File("images/big_plant1.png"))));
+            textures.put("bigPlant2", TextureLoader.getTexture("PNG", new FileInputStream(new File("images/big_plant2.png"))));
             // Towers
-            basicTower = TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/basic_tower.png")));
-            basicTowerBase = TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/basic_tower_base.png")));
-            basicTowerTurret = TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/basic_tower_turret.png")));
-            circleTower = TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/circle_tower.png")));
+            textures.put("basicTower", TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/basic_tower.png"))));
+            textures.put("basicTowerBase", TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/basic_tower_base.png"))));
+            textures.put("basicTowerTurret", TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/basic_tower_turret.png"))));
+            textures.put("circleTower", TextureLoader.getTexture("PNG", new FileInputStream(new File("towers/circle_tower.png"))));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Towser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -170,14 +174,13 @@ public class Towser{
         }
     }
     
+    public static Texture getTexture(String key){
+        return textures.get(key);
+    }
+    
     private static void releaseTextures(){
-        woodBG.release();
-        woodDisplay.release();
-        wall.release();
-        road.release();
-        grass.release();
-        basicTower.release();
-        circleTower.release();
+        for(Map.Entry<String, Texture> entry : textures.entrySet())
+            entry.getValue().release();
     }
     
     @SuppressWarnings("unchecked")

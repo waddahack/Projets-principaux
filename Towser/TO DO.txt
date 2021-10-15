@@ -1,12 +1,12 @@
 TILES :
 
-- Faire une tile par plante
-- Sans plante = fond verd only
+/!\ /!\- Sprite roadTurn
+- Sprite bush
+- Sprite grass+caillasse
 
-LEVELS :
+CODE : 
 
-- Plantes et buissons placés aléatoirement (avec un taux, grass > plants > bush, et avec une rotation 90*k au pif)
-
-SPRITES :
-
-- Faire un ou deux buissons
+- Coder la possibilité de focus l'ennemie le premier, le dernier, le plus fort
+- Coder la possibilité de vendre la tourelle à 75% de son prix total
+/!\ - Ennemie : Refaire la fonction "chercher la direction" en utilisant la variable Game.road + l'appeler qu'après avoir
+	    parcourut toute un tuile et pas chaque frame
