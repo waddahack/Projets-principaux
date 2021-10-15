@@ -16,8 +16,9 @@ public class CircleTower extends Tower{
         textures.add(Towser.getTexture("circleTower"));
         canRotate = false;
         price = priceP;
+        totalPrice = price;
         power = 10;
-        shootRate = 0.3;
+        shootRate = 0.3f;
         range = (int) (1.2*Game.unite);
         life = 100;
         width = Game.unite;
@@ -25,11 +26,12 @@ public class CircleTower extends Tower{
         bulletSpeed = 8;
         follow = false;
         isMultipleShot = true;
-        upgradePrices = new ArrayList<Integer>();
-        upgradePrices.add(150); // range
-        upgradePrices.add(150); // power 
-        upgradePrices.add(170); // shoot rate
-        upgradePrices.add(0); // bullet speed
+        upgradePrices.replace("range", 150);
+        upgradePrices.replace("power", 150);
+        upgradePrices.replace("shootRate", 170);
+        upgradePriceIncreases.put("range", 0f);
+        upgradePriceIncreases.put("power", 0f);
+        upgradePriceIncreases.put("shootRate", 0f);
     }
     
     @Override
@@ -48,6 +50,7 @@ public class CircleTower extends Tower{
         if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
             Game.money -= upgradePrices.get(n);
             range *= 1.2;
+            totalPrice += upgradePrices.get(n);
             upgradePrices.set(n, (int)(1.5*upgradePrices.get(n)));
             b.click();
             if(b.getNbClicks() == 2)
@@ -58,6 +61,7 @@ public class CircleTower extends Tower{
         if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
             Game.money -= upgradePrices.get(n);
             power *= 1.5;
+            totalPrice += upgradePrices.get(n);
             upgradePrices.set(n, (int)(1.5*upgradePrices.get(n)));
             b.click();
             if(b.getNbClicks() == 3)
@@ -69,6 +73,7 @@ public class CircleTower extends Tower{
             b.click();
             Game.money -= upgradePrices.get(n);
             shootRate *= 1.5;
+            totalPrice += upgradePrices.get(n);
             upgradePrices.set(n, (int)(1.3*upgradePrices.get(n)*b.getNbClicks()));
             if(b.getNbClicks() == 3)
                 upgradePrices.set(n, 850);

@@ -29,6 +29,7 @@ public class BasicTower extends Tower{
         textures.add(Towser.getTexture("basicTowerTurret"));
         canRotate = true;
         price = priceP;
+        totalPrice = price;
         power = 15;
         shootRate = 0.5f;
         range = 3*Game.unite;
@@ -38,11 +39,14 @@ public class BasicTower extends Tower{
         bulletSpeed = 6;
         follow = false;
         isMultipleShot = false;
-        upgradePrices = new ArrayList<Integer>();
-        upgradePrices.add(100); // range
-        upgradePrices.add(180); // power 
-        upgradePrices.add(150); // shoot rate
-        upgradePrices.add(60); // bullet speed
+        upgradePrices.replace("range", 100);
+        upgradePrices.replace("power", 180);
+        upgradePrices.replace("shootRate", 150);
+        upgradePrices.replace("bulletSpeed", 60);
+        upgradePriceIncreases.put("range", 0f);
+        upgradePriceIncreases.put("power", 0f);
+        upgradePriceIncreases.put("shootRate", 0f);
+        upgradePriceIncreases.put("bulletSpeed", 0f);
     }
     
     @Override
@@ -112,41 +116,51 @@ public class BasicTower extends Tower{
     @Override
     public void checkOverlayInput(){
         ArrayList<Button> buts = overlay.getButtons();
-        int n = 0;
-        if(buts.get(n).isClicked(0) && Game.money >= upgradePrices.get(n)){
+        Button b;
+        int n;
+        n = 0;
+        b = buts.get(n);
+        if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
             Game.money -= upgradePrices.get(n);
             range *= 1.2;
-            upgradePrices.set(n, (int)(1.5*upgradePrices.get(n)));
-            buts.get(n).click();
-            if(buts.get(n).getNbClicks() == 3)
-                buts.get(n).setHidden(true);
+            totalPrice += upgradePrices.get(n);
+            upgradePrices.replace("range", (int)(1.5*upgradePrices.get(n)));
+            b.click();
+            if(b.getNbClicks() == 3)
+                b.setHidden(true);
         }
         n = 1;
-        if(buts.get(n).isClicked(0) && Game.money >= upgradePrices.get(n)){
+        b = buts.get(n);
+        if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
             Game.money -= upgradePrices.get(n);
             power += 10;
-            upgradePrices.set(n, (int)(1.25*upgradePrices.get(n)));
-            buts.get(n).click();
-            if(buts.get(n).getNbClicks() == 3)
-                buts.get(n).setHidden(true);
+            totalPrice += upgradePrices.get(n);
+            upgradePrices.replace("power", (int)(1.25*upgradePrices.get(n)));
+            b.click();
+            if(b.getNbClicks() == 3)
+                b.setHidden(true);
         }
         n = 2;
-        if(buts.get(n).isClicked(0) && Game.money >= upgradePrices.get(n)){
+        b = buts.get(n);
+        if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
             Game.money -= upgradePrices.get(n);
             shootRate *= 1.4;
-            upgradePrices.set(n, (int)(1.7*upgradePrices.get(n)));
-            buts.get(n).click();
-            if(buts.get(n).getNbClicks() == 5)
-                buts.get(n).setHidden(true);
+            totalPrice += upgradePrices.get(n);
+            upgradePrices.replace("shootRate", (int)(1.7*upgradePrices.get(n)));
+            b.click();
+            if(b.getNbClicks() == 5)
+                b.setHidden(true);
         }
         n = 3;
-        if(buts.get(n).isClicked(0) && Game.money >= upgradePrices.get(n)){
+        b = buts.get(n);
+        if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
             Game.money -= upgradePrices.get(n);
             bulletSpeed *= 1.4;
-            upgradePrices.set(n, (int)(1.8*upgradePrices.get(n)));
-            buts.get(n).click();
-            if(buts.get(n).getNbClicks() == 3)
-                buts.get(n).setHidden(true);
+            totalPrice += upgradePrices.get(n);
+            upgradePrices.replace("bulletSpeed", (int)(1.8*upgradePrices.get(n)));
+            b.click();
+            if(b.getNbClicks() == 3)
+                b.setHidden(true);
         }
     }
 }

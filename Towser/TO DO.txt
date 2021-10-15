@@ -1,6 +1,5 @@
 TILES :
 
-/!\ /!\- Sprite roadTurn
 - Sprite bush
 - Sprite grass+caillasse
 
@@ -8,5 +7,3 @@ CODE :
 
 - Coder la possibilité de focus l'ennemie le premier, le dernier, le plus fort
 - Coder la possibilité de vendre la tourelle à 75% de son prix total
-/!\ - Ennemie : Refaire la fonction "chercher la direction" en utilisant la variable Game.road + l'appeler qu'après avoir
-	    parcourut toute un tuile et pas chaque frame

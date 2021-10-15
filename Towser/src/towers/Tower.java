@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
@@ -24,26 +26,37 @@ import ui.*;
 
 public abstract class Tower extends Tile implements Shootable{
     
-    protected int price, power, bulletSpeed, range, life, width;
-    protected double lastShoot = 0, shootRate;
-    protected float r = 0.7f, g = 0.7f, b = 0.7f;
+    protected int price, range, power, bulletSpeed, life, width, totalPrice;
+    protected double lastShoot = 0;
+    protected float r = 0.7f, g = 0.7f, b = 0.7f, shootRate;
     protected String name;
     protected boolean isPlaced = false, renderIt = true, follow, selected = true, isMultipleShot, canRotate;
     protected Ennemie enemyAimed;
     protected ArrayList<Bullet> bullets = new ArrayList<Bullet>(), bulletsToRemove = new ArrayList<Bullet>();
     protected Overlay overlay;
-    protected ArrayList<Integer> upgradePrices; // order : range, power, shootRate
+    protected Map<String, Integer> upgradePrices; // range, power, shootRate, bulletSpeed
+    protected Map<String, Float> upgradePriceIncreases; // range, power, shootRate, bulletSpeed
     
     public Tower(Texture text, String type){
         super(text, type);
         this.setTower(this);
+        upgradePrices = new HashMap<String, Integer>();
+        upgradePrices.put("range", 0);
+        upgradePrices.put("power", 0);
+        upgradePrices.put("shootRate", 0);
+        upgradePrices.put("bulletSpeed", 0);
+        upgradePriceIncreases = new HashMap<String, Float>();
+        upgradePriceIncreases.put("range", 0f);
+        upgradePriceIncreases.put("power", 0f);
+        upgradePriceIncreases.put("shootRate", 0f);
+        upgradePriceIncreases.put("bulletSpeed", 0f);
     }
     
     public String getName(){
         return name;
     }
     
-    public ArrayList<Integer> getUpgradePrices(){
+    public Map<String, Integer> getUpgradePrices(){
         return upgradePrices;
     }
     
@@ -59,7 +72,7 @@ public abstract class Tower extends Tile implements Shootable{
         return isMultipleShot;
     }
     
-    public double getShootRate(){
+    public float getShootRate(){
         return shootRate;
     }
     
@@ -179,8 +192,8 @@ public abstract class Tower extends Tile implements Shootable{
         return (life <= 0);
     }
     
-    public int getBulletSpeed(){
-        return bulletSpeed;
+    public float getBulletSpeed(){
+        return power;
     }
     
     public void render(){
@@ -273,5 +286,46 @@ public abstract class Tower extends Tile implements Shootable{
     }
     
     public void checkOverlayInput(){
+        int tX = overlay.getMargin(), tY = overlay.getH()/3, k = 0;
+        String t;
+        Button b;
+        overlay.render();
+        
+        overlay.drawText(overlay.getW()/2-Towser.normalL.getWidth(name)/2, overlay.getMargin()-Towser.normalL.getHeight(name)/2, name, Towser.normalL);
+        
+        t = "Range : "+range;
+        overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2, t, Towser.normal);
+        if(!overlay.getButtons().get(0).isHidden()){
+            t = upgradePrices.get("range")+"*";
+            b = overlay.getButtons().get(0);
+            overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
+        }
+        
+        k++;
+        t = "Power : "+power;
+        overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2+overlay.getButtons().get(0).getH()+overlay.getMargin(), t, Towser.normal);
+        if(!overlay.getButtons().get(1).isHidden()){
+            t = upgradePrices.get("power")+"*";
+            b = overlay.getButtons().get(1);
+            overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
+        }
+        
+        k++;
+        t = "Shoot rate : "+Math.floor(shootRate*100)/100;
+        overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2+overlay.getButtons().get(0).getH()*k+overlay.getMargin()*k, t, Towser.normal);
+        if(!overlay.getButtons().get(2).isHidden()){
+            t = upgradePrices.get("shootRate")+"*";
+            b = overlay.getButtons().get(2);
+            overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
+        }
+        
+        k++;
+        t = "Bullet speed : "+bulletSpeed;
+        overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2+overlay.getButtons().get(0).getH()*k+overlay.getMargin()*k, t, Towser.normal);
+        if(!overlay.getButtons().get(3).isHidden()){
+            t = upgradePrices.get("bulletSpeed")+"*";
+            b = overlay.getButtons().get(3);
+            overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
+        }
     }
 }
