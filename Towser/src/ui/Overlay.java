@@ -90,6 +90,11 @@ public class Overlay {
         buttons.add(b);
     }
     
+    public void addButton(int x, int y, int w, int h, String type, String text, int nbClicksMax){
+        Button b = new Button(this.x+x, this.y+y, w, h, text, type, nbClicksMax);
+        buttons.add(b);
+    }
+    
     public void setButton(int i, int x, int y, int w, int h, String type, String text){
         Button b = new Button(this.x+x, this.y+y, w, h, text, type);
         buttons.set(i, b);

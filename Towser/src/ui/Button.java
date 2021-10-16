@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.input.Mouse;
@@ -15,9 +14,7 @@ import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glRectf;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glVertex2i;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -26,17 +23,26 @@ import towser.Towser;
 
 public class Button {
     
-    private int x, y, width, height, nbClicks = 0;
+    private int x, y, width, height, nbClicks = 0, nbClicksMax;
     private String text;
     private Texture bg = null, bgHover = null, currentText = null;
     private boolean hidden = false;
     
     public Button(int x, int y, int width, int height, String text, String bgName){
+        build(x ,y, width, height, text, bgName, 0);
+    }
+    
+    public Button(int x, int y, int width, int height, String text, String bgName, int nbClicksMax){
+        build(x ,y, width, height, text, bgName, nbClicksMax);
+    }
+    
+    private void build(int x, int y, int width, int height, String text, String bgName, int nbClicksMax){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.text = text;
+        this.nbClicksMax = nbClicksMax;
         try {
             bg = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/"+bgName+"_button.png")));
             bgHover = TextureLoader.getTexture("PNG", new FileInputStream(new File("images/"+bgName+"_button_hover.png")));
@@ -49,6 +55,8 @@ public class Button {
     
     public void click(){
         nbClicks++;
+        if(nbClicks == nbClicksMax)
+            hidden = true;
     }
     
     public void setHidden(boolean b){

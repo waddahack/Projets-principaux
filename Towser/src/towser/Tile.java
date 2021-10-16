@@ -1,4 +1,4 @@
-package ui;
+package towser;
 
 import java.util.ArrayList;
 import org.lwjgl.input.Mouse;
@@ -14,6 +14,14 @@ public class Tile {
     protected double angle = 0, newAngle = 0;
     protected String type;
     protected ArrayList<Texture> textures;
+    
+    public Tile(String t){
+        textures = new ArrayList<Texture>();
+        tower = null;
+        type = t;
+        this.x = Mouse.getX();
+        this.y = Towser.windHeight-Mouse.getY();
+    }
     
     public Tile(Texture text, String t){
         textures = new ArrayList<Texture>();

@@ -10,7 +10,7 @@ import towser.Shootable;
 
 public class Bullet{
     
-    private int speed, radius;
+    private int radius, speed;
     private Shootable aim, shooter;
     private boolean follow;
     private double x, y, xDest, yDest, rdyToMove = 0;
@@ -99,7 +99,8 @@ public class Bullet{
     private boolean isInRange(){
         double xDiff = xDest-shooter.getX(), yDiff = yDest-shooter.getY();
         double angle = Math.atan2(yDiff, xDiff), cosinus = Math.abs(Math.cos(angle)), sinus = Math.abs(Math.sin(angle)), coef = 1.5;
-        if(shooter.isMultipleShot()) coef = 1;
+        if(shooter.isMultipleShot())
+            coef = 1;
         if(follow)
             return (x <= Towser.windWidth && x >= 0 && y <= Towser.windHeight && y >= 0 && !aim.isDead());
         return (Math.abs(x-shooter.getX()) <= shooter.getRange()*cosinus*coef && Math.abs(y-shooter.getY()) <= shooter.getRange()*sinus*coef);

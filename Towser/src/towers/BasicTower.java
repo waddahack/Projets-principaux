@@ -1,21 +1,6 @@
 package towers;
 
-import towers.Tower;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import org.lwjgl.input.Mouse;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glRectf;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2i;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 import towser.*;
 import ui.*;
 
@@ -24,9 +9,11 @@ public class BasicTower extends Tower{
     public static int priceP = 200;
     
     public BasicTower() {
-        super(Towser.getTexture("grass"), "basicTower");
+        super("basicTower");
+        textures.add(Towser.getTexture("grass"));
         textures.add(Towser.getTexture("basicTowerBase"));
         textures.add(Towser.getTexture("basicTowerTurret"));
+        textureStatic = Towser.getTexture(("basicTower"));
         canRotate = true;
         price = priceP;
         totalPrice = price;
@@ -39,14 +26,24 @@ public class BasicTower extends Tower{
         bulletSpeed = 6;
         follow = false;
         isMultipleShot = false;
-        upgradePrices.replace("range", 100);
-        upgradePrices.replace("power", 180);
-        upgradePrices.replace("shootRate", 150);
-        upgradePrices.replace("bulletSpeed", 60);
-        upgradePriceIncreases.put("range", 0f);
-        upgradePriceIncreases.put("power", 0f);
-        upgradePriceIncreases.put("shootRate", 0f);
-        upgradePriceIncreases.put("bulletSpeed", 0f);
+        ArrayList<Float> prices = new ArrayList<Float>();
+        ArrayList<Float> priceMultipliers = new ArrayList<Float>();
+        ArrayList<Float> multipliers = new ArrayList<Float>();
+        prices.add(100f); // range
+        prices.add(180f); // power
+        prices.add(150f); // shoot rate
+        prices.add(60f); // bullet speed
+        priceMultipliers.add(1.5f);
+        priceMultipliers.add(1.25f);
+        priceMultipliers.add(1.7f);
+        priceMultipliers.add(1.f);
+        multipliers.add(1.2f);
+        multipliers.add(10f);
+        multipliers.add(1.4f);
+        multipliers.add(1.4f);
+        upgradesParam.put("prices", prices);
+        upgradesParam.put("priceMultipliers", priceMultipliers);
+        upgradesParam.put("multipliers", multipliers);
     }
     
     @Override
@@ -62,105 +59,9 @@ public class BasicTower extends Tower{
         else
             overlay = new Overlay(Game.unite/2, 3*Game.unite/2, 6*Game.unite, 5*Game.unite);
         int upX = overlay.getW()-overlay.getMargin()-50, upY = overlay.getH()/3, upW = 100, upH = 25;
-        overlay.addButton(upX, upY, upW, upH, "blue", "Upgrade");
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()+overlay.getMargin(), upW, upH, "blue", "Upgrade");
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*2+overlay.getMargin()*2, upW, upH, "blue", "Upgrade");
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*3+overlay.getMargin()*3, upW, upH, "blue", "Upgrade");
-    }
-    
-    @Override
-    public void renderOverlay(){
-        int tX = overlay.getMargin(), tY = overlay.getH()/3, k = 0;
-        String t;
-        Button b;
-        overlay.render();
-        
-        overlay.drawText(overlay.getW()/2-Towser.normalL.getWidth(name)/2, overlay.getMargin()-Towser.normalL.getHeight(name)/2, name, Towser.normalL);
-        
-        t = "Range : "+range;
-        overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2, t, Towser.normal);
-        if(!overlay.getButtons().get(0).isHidden()){
-            t = upgradePrices.get(0)+"*";
-            b = overlay.getButtons().get(0);
-            overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
-        }
-        
-        k++;
-        t = "Power : "+power;
-        overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2+overlay.getButtons().get(0).getH()+overlay.getMargin(), t, Towser.normal);
-        if(!overlay.getButtons().get(1).isHidden()){
-            t = upgradePrices.get(1)+"*";
-            b = overlay.getButtons().get(1);
-            overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
-        }
-        
-        k++;
-        t = "Shoot rate : "+Math.floor(shootRate*100)/100;
-        overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2+overlay.getButtons().get(0).getH()*k+overlay.getMargin()*k, t, Towser.normal);
-        if(!overlay.getButtons().get(2).isHidden()){
-            t = upgradePrices.get(2)+"*";
-            b = overlay.getButtons().get(2);
-            overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
-        }
-        
-        k++;
-        t = "Bullet speed : "+bulletSpeed;
-        overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2+overlay.getButtons().get(0).getH()*k+overlay.getMargin()*k, t, Towser.normal);
-        if(!overlay.getButtons().get(3).isHidden()){
-            t = upgradePrices.get(3)+"*";
-            b = overlay.getButtons().get(3);
-            overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
-        }
-    }
-    
-    @Override
-    public void checkOverlayInput(){
-        ArrayList<Button> buts = overlay.getButtons();
-        Button b;
-        int n;
-        n = 0;
-        b = buts.get(n);
-        if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
-            Game.money -= upgradePrices.get(n);
-            range *= 1.2;
-            totalPrice += upgradePrices.get(n);
-            upgradePrices.replace("range", (int)(1.5*upgradePrices.get(n)));
-            b.click();
-            if(b.getNbClicks() == 3)
-                b.setHidden(true);
-        }
-        n = 1;
-        b = buts.get(n);
-        if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
-            Game.money -= upgradePrices.get(n);
-            power += 10;
-            totalPrice += upgradePrices.get(n);
-            upgradePrices.replace("power", (int)(1.25*upgradePrices.get(n)));
-            b.click();
-            if(b.getNbClicks() == 3)
-                b.setHidden(true);
-        }
-        n = 2;
-        b = buts.get(n);
-        if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
-            Game.money -= upgradePrices.get(n);
-            shootRate *= 1.4;
-            totalPrice += upgradePrices.get(n);
-            upgradePrices.replace("shootRate", (int)(1.7*upgradePrices.get(n)));
-            b.click();
-            if(b.getNbClicks() == 5)
-                b.setHidden(true);
-        }
-        n = 3;
-        b = buts.get(n);
-        if(b.isClicked(0) && Game.money >= upgradePrices.get(n)){
-            Game.money -= upgradePrices.get(n);
-            bulletSpeed *= 1.4;
-            totalPrice += upgradePrices.get(n);
-            upgradePrices.replace("bulletSpeed", (int)(1.8*upgradePrices.get(n)));
-            b.click();
-            if(b.getNbClicks() == 3)
-                b.setHidden(true);
-        }
+        overlay.addButton(upX, upY, upW, upH, "blue", "Upgrade", 3);
+        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()+overlay.getMargin(), upW, upH, "blue", "Upgrade", 3);
+        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*2+overlay.getMargin()*2, upW, upH, "blue", "Upgrade", 5);
+        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*3+overlay.getMargin()*3, upW, upH, "blue", "Upgrade", 3);
     }
 }

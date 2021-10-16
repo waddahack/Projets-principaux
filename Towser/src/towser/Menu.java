@@ -6,18 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import ui.Button;
 import java.util.ArrayList;
-import java.util.List;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Drawable;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import static towser.Towser.windHeight;
 import static towser.Towser.windWidth;
-import ui.Overlay;
 
 
 public class Menu {

@@ -3,8 +3,6 @@ package ennemies;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.lwjgl.opengl.Drawable;
-import towser.Towser;
 
 
 public class Wave extends Thread{

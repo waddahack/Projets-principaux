@@ -1,8 +1,6 @@
 package towser;
 
-import ennemies.Ennemie;
 import java.awt.Color;
-import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,25 +13,16 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.MemoryUtil;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import static org.lwjgl.opengl.ARBFramebufferObject.glGenerateMipmap;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.GL_TEXTURE_BASE_LEVEL;
-import static org.lwjgl.opengl.GL12.GL_TEXTURE_MAX_LEVEL;
-import static org.lwjgl.opengl.GL14.GL_TEXTURE_COMPARE_FUNC;
-import static org.lwjgl.opengl.GL14.GL_TEXTURE_COMPARE_MODE;
-import org.lwjgl.opengl.SharedDrawable;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
-import towers.Bullet;
 
 public class Towser{
     

@@ -3,22 +3,12 @@ package ennemies;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Drawable;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glRectf;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import org.lwjgl.opengl.SharedDrawable;
 import org.newdawn.slick.opengl.Texture;
 import towers.Bullet;
 import towers.Tower;
 import towser.Game;
-import towser.Towser;
 import towser.Shootable;
-import ui.Tile;
+import towser.Tile;
 
 public abstract class Ennemie extends Thread implements Shootable{
     
@@ -178,9 +168,9 @@ public abstract class Ennemie extends Thread implements Shootable{
     }
     
     private void move(){
-        if(isInBase())
-            attack();
         if((x%Game.unite == Game.unite/2 && y%Game.unite == Game.unite/2)){
+            if(isInBase())
+                attack();
             chooseDirection();
             indiceTuile += 1;
         }

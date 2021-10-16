@@ -13,7 +13,7 @@ public interface Shootable {
     public int getWidth();
     public boolean isDead();
     public boolean getFollow();
-    public float getBulletSpeed();
+    public int getBulletSpeed();
     public int getRange();
     public boolean isMultipleShot();
 }

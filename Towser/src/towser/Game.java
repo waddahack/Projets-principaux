@@ -2,27 +2,14 @@ package towser;
 
 import ennemies.Ennemie;
 import ennemies.Wave;
-import java.awt.Color;
 import towers.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.Drawable;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.util.glu.GLU.gluPerspective;
 import org.newdawn.slick.opengl.Texture;
 import static towser.Towser.windHeight;
 import static towser.Towser.windWidth;
@@ -271,7 +258,7 @@ public class Game {
         float r = 100, g = r, b = r;
         ArrayList<Texture> listeText = tile.getTextures();
         
-        if(listeText == null || listeText.isEmpty()){ // Si pas de text
+        if(listeText == null || listeText.isEmpty()){ // Si pas de texture
             r = tile.getR();
             g = tile.getG();
             b = tile.getB();

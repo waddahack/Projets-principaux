@@ -1,6 +1,5 @@
 package ennemies;
 
-import org.lwjgl.opengl.Drawable;
 import towser.Game;
 
 
