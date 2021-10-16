@@ -8,6 +8,7 @@ import java.io.IOException;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -37,6 +38,7 @@ public class Towser{
     private static Map<String, Texture> textures;
     public static UnicodeFont normal, astres, life, normalL, price;
     public static DecimalFormat formatter = new DecimalFormat("#.##");
+    public static Map<String, ArrayList<Float>> colors;
     
     public static void main(String[] args){
         try{
@@ -72,6 +74,27 @@ public class Towser{
         glMatrixMode(GL_MODELVIEW);
         menu = new Menu();
         game = new Game(1);
+        colors = new HashMap<String, ArrayList<Float>>();
+        ArrayList<Float> blueDark = new ArrayList<Float>();
+        ArrayList<Float> blue = new ArrayList<Float>();
+        ArrayList<Float> grey = new ArrayList<Float>();
+        ArrayList<Float> greyLight = new ArrayList<Float>();
+        blueDark.add(38f/255f);
+        blueDark.add(43f/255f);
+        blueDark.add(68f/255f);
+        colors.put("blue_dark", blueDark);
+        blue.add(58f/255f);
+        blue.add(68f/255f);
+        blue.add(102f/255f);
+        colors.put("blue", blue);
+        grey.add(90f/255f);
+        grey.add(105f/255f);
+        grey.add(136f/255f);
+        colors.put("grey", grey);
+        greyLight.add(139f/255f);
+        greyLight.add(155f/255f);
+        greyLight.add(180f/255f);
+        colors.put("grey_light", greyLight);
     }
 
     private static void render() {
@@ -108,11 +131,11 @@ public class Towser{
         }
     }
     
-    public static void drawCircle(double x, double y, float radius, float r, float g, float b){
+    public static void drawCircle(double x, double y, float radius, ArrayList<Float> rgb){
         float DEG2RAD = (float) (3.15149/180), degInRad;
         int i;
         glBegin(GL_LINE_LOOP);
-        glColor3f(r, g, b);
+        glColor3f(rgb.get(0), rgb.get(1), rgb.get(2));
         for(i = 0 ; i < 360; i++){
             degInRad = i*DEG2RAD;
             glVertex2d(x+cos(degInRad)*radius, y+sin(degInRad)*radius);
@@ -120,11 +143,11 @@ public class Towser{
        glEnd();
     }
     
-    public static void drawFilledCircle(double x, double y, float radius, float r, float g, float b){
+    public static void drawFilledCircle(double x, double y, float radius, ArrayList<Float> rgb, float a){
         float DEG2RAD = (float) (3.15149/180), degInRad, degInRad2;
         int i;
         glBegin(GL_TRIANGLES);
-        glColor3f(r, g, b);
+        glColor4f(rgb.get(0), rgb.get(1), rgb.get(2), a);
         for(i = 0 ; i < 360; i++){
             degInRad = i*DEG2RAD;
             degInRad2 = (i+1)*DEG2RAD;

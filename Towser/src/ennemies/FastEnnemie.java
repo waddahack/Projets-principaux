@@ -1,5 +1,6 @@
 package ennemies;
 
+import java.util.ArrayList;
 import towser.Game;
 
 public class FastEnnemie extends Ennemie{
@@ -15,8 +16,9 @@ public class FastEnnemie extends Ennemie{
         life = 15;
         id = 21;
         width = Game.unite/2-Game.unite/6;
-        r = 1;
-        g = 1;
-        b = 0;
+        rgb = new ArrayList<Float>();
+        rgb.add(1f);
+        rgb.add(1f);
+        rgb.add(0f);
     }
 }

@@ -38,9 +38,9 @@ public class Game {
         ennemies = new ArrayList<Ennemie>();
         ennemiesDead = new ArrayList<Ennemie>();
         life = 100;
-        money = 20000;
-        waveNumber = 30;
-        waveReward = 150;
+        money = 200;
+        waveNumber = 1;
+        waveReward = 250;
         initOverlays();
     }
     
@@ -225,7 +225,7 @@ public class Game {
         for(i = 0 ; i < ennemies.size() ; i++){
             e = ennemies.get(i);
             if(e.isSpawned())
-                Towser.drawFilledCircle(e.getX(), e.getY(), e.getWidth(), e.getR(), e.getG(), e.getB());
+                Towser.drawFilledCircle(e.getX(), e.getY(), e.getWidth(), e.getRGB(), 1f);
         }
         for(Tower t : towers){
             if(!t.isPlaced()){

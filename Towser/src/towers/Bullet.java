@@ -14,9 +14,9 @@ public class Bullet{
     private Shootable aim, shooter;
     private boolean follow;
     private double x, y, xDest, yDest, rdyToMove = 0;
-    private float r, g, b;
+    private ArrayList<Float> rgb = new ArrayList<Float>();
     
-    public Bullet(Shootable shooter, Shootable aim, int radius, float r, float g, float b){
+    public Bullet(Shootable shooter, Shootable aim, int radius, ArrayList<Float> rgb){
         this.x = shooter.getX();
         this.y = shooter.getY();
         this.radius = radius;
@@ -25,13 +25,11 @@ public class Bullet{
         this.aim = aim;
         xDest = aim.getX();
         yDest = aim.getY();
-        this.r = r;
-        this.g = g;
-        this.b = b;
+        this.rgb = rgb;
         this.shooter = shooter;
     }
     
-    public Bullet(Shootable shooter, double xDest, double yDest, int radius, float r, float g, float b){
+    public Bullet(Shootable shooter, double xDest, double yDest, int radius, ArrayList<Float> rgb){
         this.x = shooter.getX();
         this.y = shooter.getY();
         this.radius = radius;
@@ -40,9 +38,7 @@ public class Bullet{
         this.aim = null;
         this.xDest = xDest;
         this.yDest = yDest;
-        this.r = r;
-        this.g = g;
-        this.b = b;
+        this.rgb = rgb;
         this.shooter = shooter;
     }
     
@@ -76,7 +72,7 @@ public class Bullet{
     public void render(){
         if(System.currentTimeMillis()-rdyToMove >= 10){
             move();
-            Towser.drawFilledCircle(x, y, radius, r, g, b);
+            Towser.drawFilledCircle(x, y, radius, rgb, 1f);
         }
     }
     

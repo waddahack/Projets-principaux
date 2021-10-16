@@ -14,7 +14,8 @@ public abstract class Ennemie extends Thread implements Shootable{
     
     protected int reward, power, shootRate, range, life, id, width, indiceTuile = 0;
     protected Texture sprite = null;
-    protected float r, g, b, moveSpeed;
+    protected float moveSpeed;
+    protected ArrayList<Float> rgb;
     protected long stopFor = 0;
     protected String name;
     protected double x, y, xBase, yBase, speedRatio;
@@ -50,12 +51,8 @@ public abstract class Ennemie extends Thread implements Shootable{
         return speedRatio;
     }
     
-    public float getR(){
-        return r;
-    }
-    
-    public float getG(){
-        return g;
+    public ArrayList<Float> getRGB(){
+        return rgb;
     }
     
     public int getIndiceTuile(){
@@ -64,10 +61,6 @@ public abstract class Ennemie extends Thread implements Shootable{
     
     public float getMoveSpeed(){
         return moveSpeed;
-    }
-    
-    public float getB(){
-        return b;
     }
     
     public double getX(){

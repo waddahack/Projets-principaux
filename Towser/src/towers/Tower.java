@@ -25,13 +25,14 @@ public abstract class Tower extends Tile implements Shootable{
     
     protected int price, range, power, bulletSpeed, life, width, totalPrice, nbUpgrades = 4;
     protected double lastShoot = 0;
-    protected float r = 0.7f, g = 0.7f, b = 0.7f, shootRate;
+    protected float shootRate;
     protected String name;
     protected boolean isPlaced = false, renderIt = true, follow, selected = true, isMultipleShot, canRotate;
     protected Ennemie enemyAimed;
     protected ArrayList<Bullet> bullets = new ArrayList<Bullet>(), bulletsToRemove = new ArrayList<Bullet>();
     protected Overlay overlay;
     protected Texture textureStatic;
+    protected ArrayList<Float> rgb;
     // Upgrades order : range, power, shootRate, bulletSpeed
     protected Map<String, ArrayList<Float>> upgradesParam;
     
@@ -153,8 +154,8 @@ public abstract class Tower extends Tile implements Shootable{
     
     public void shoot(){
         lastShoot = System.currentTimeMillis();
-        Bullet b = new Bullet(this, enemyAimed, 5, 0.9f, 0.1f, 0.1f);
-        bullets.add(b);
+        Bullet bullet = new Bullet(this, enemyAimed, 5, rgb);
+        bullets.add(bullet);
     }
     
     public void renderBullets(){
@@ -198,8 +199,6 @@ public abstract class Tower extends Tile implements Shootable{
                 glVertex2d(xPos, yPos+Game.unite);
             glEnd();
             glDisable(GL_TEXTURE_2D);  
-            //glColor3f(r, g, b);
-            //glRectf(Math.floorDiv((int) x, Game.unite)*Game.unite, Math.floorDiv((int) y, Game.unite)*Game.unite, Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite);
         }
         x += Mouse.getDX();
         y -= Mouse.getDY();
@@ -261,7 +260,10 @@ public abstract class Tower extends Tile implements Shootable{
     
     public void renderDetails(){
         if(selected && renderIt){
-            Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range, 1, 1, 1);
+            Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range, Towser.colors.get("blue"));
+            Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-1, Towser.colors.get("grey"));
+            Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-2, Towser.colors.get("grey_light"));
+            //Towser.drawFilledCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-2, Towser.colors.get("grey_light"), 0.2f);
             if(isPlaced)
                 renderOverlay();
         }
@@ -288,7 +290,7 @@ public abstract class Tower extends Tile implements Shootable{
                     t = "Power : "+power;
                     break;
                 case 2:
-                    t = "Shoot rate : "+Math.floor(shootRate*10)/10;
+                    t = "Shoot rate : "+shootRate;
                     break;
                 case 3:
                     t = "Bullet speed : "+bulletSpeed;
@@ -361,7 +363,7 @@ public abstract class Tower extends Tile implements Shootable{
                         power = (int)up;
                         break;
                     case 2:
-                        shootRate = up;
+                        shootRate = (float) Math.ceil(up*10)/10;
                         break;
                     case 3:
                         bulletSpeed = (int)up;

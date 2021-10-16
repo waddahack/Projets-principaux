@@ -26,6 +26,7 @@ public class CircleTower extends Tower{
         bulletSpeed = 8;
         follow = false;
         isMultipleShot = true;
+        rgb = Towser.colors.get("grey");
         ArrayList<Float> prices = new ArrayList<Float>();
         ArrayList<Float> priceMultipliers = new ArrayList<Float>();
         ArrayList<Float> multipliers = new ArrayList<Float>();
@@ -71,13 +72,13 @@ public class CircleTower extends Tower{
         float r = 0, g = 0, b = 0;
         lastShoot = System.currentTimeMillis();
 
-        bullets.add(new Bullet(this, x-100, y, 3, r, g, b));
-        bullets.add(new Bullet(this, x+100, y, 3, r, g, b));
-        bullets.add(new Bullet(this, x, y-100, 3, r, g, b));
-        bullets.add(new Bullet(this, x, y+100, 3, r, g, b));
-        bullets.add(new Bullet(this, x-100, y-100, 3, r, g, b));
-        bullets.add(new Bullet(this, x+100, y+100, 3, r, g, b));
-        bullets.add(new Bullet(this, x+100, y-100, 3, r, g, b));
-        bullets.add(new Bullet(this, x-100, y+100, 3, r, g, b));
+        bullets.add(new Bullet(this, x-100, y, 3, rgb));
+        bullets.add(new Bullet(this, x+100, y, 3, rgb));
+        bullets.add(new Bullet(this, x, y-100, 3, rgb));
+        bullets.add(new Bullet(this, x, y+100, 3, rgb));
+        bullets.add(new Bullet(this, x-100, y-100, 3, rgb));
+        bullets.add(new Bullet(this, x+100, y+100, 3, rgb));
+        bullets.add(new Bullet(this, x+100, y-100, 3, rgb));
+        bullets.add(new Bullet(this, x-100, y+100, 3, rgb));
     }
 }

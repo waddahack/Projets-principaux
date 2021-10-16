@@ -26,6 +26,7 @@ public class BasicTower extends Tower{
         bulletSpeed = 6;
         follow = false;
         isMultipleShot = false;
+        rgb = Towser.colors.get("blue");
         ArrayList<Float> prices = new ArrayList<Float>();
         ArrayList<Float> priceMultipliers = new ArrayList<Float>();
         ArrayList<Float> multipliers = new ArrayList<Float>();
@@ -36,7 +37,7 @@ public class BasicTower extends Tower{
         priceMultipliers.add(1.5f);
         priceMultipliers.add(1.25f);
         priceMultipliers.add(1.7f);
-        priceMultipliers.add(1.f);
+        priceMultipliers.add(1.6f);
         multipliers.add(1.2f);
         multipliers.add(10f);
         multipliers.add(1.4f);
@@ -48,7 +49,7 @@ public class BasicTower extends Tower{
     
     @Override
     protected void raisePrice(){
-        priceP *= 1.1;
+        priceP *= 1.2;
         price = priceP;
     }
     
