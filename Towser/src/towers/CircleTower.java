@@ -36,7 +36,7 @@ public class CircleTower extends Tower{
         prices.add(0f); // bullet speed
         priceMultipliers.add(1.5f);
         priceMultipliers.add(1.5f);
-        priceMultipliers.add(1.3f);
+        priceMultipliers.add(1.5f);
         priceMultipliers.add(0f);
         multipliers.add(1.2f);
         multipliers.add(1.5f);

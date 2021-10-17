@@ -40,7 +40,7 @@ public class Game {
         life = 100;
         money = 200;
         waveNumber = 1;
-        waveReward = 250;
+        waveReward = 200;
         initOverlays();
     }
     

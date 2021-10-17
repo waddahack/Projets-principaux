@@ -263,7 +263,7 @@ public abstract class Tower extends Tile implements Shootable{
             Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range, Towser.colors.get("blue"));
             Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-1, Towser.colors.get("grey"));
             Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-2, Towser.colors.get("grey_light"));
-            //Towser.drawFilledCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-2, Towser.colors.get("grey_light"), 0.2f);
+            Towser.drawFilledCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-2, Towser.colors.get("grey_light"), 0.1f);
             if(isPlaced)
                 renderOverlay();
         }

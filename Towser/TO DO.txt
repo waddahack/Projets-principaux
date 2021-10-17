@@ -14,4 +14,4 @@ FEATURES :
 STYLE :
 
 - Changer la police de... tout.
-- Mettre une ligne de void en dessous pour mettre les overlay des tours
+/!\ - Mettre une ligne de void en dessous pour mettre les overlay des tours

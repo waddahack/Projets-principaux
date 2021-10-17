@@ -11,7 +11,7 @@ V V V V V V V V V V V V V V V V V V V V
 0 0 0 o 0 o 0 0 0 o 0 0 0 0 0 0 0 0 0 0
 0 0 0 o 0 o 0 0 0 o 0 0 0 0 0 0 0 0 0 0
 0 0 0 o 0 o 0 0 0 o o o o o o o 0 0 0 0
-0 0 0 o o o 0 0 0 0 0 0 0 0 0 o 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 o 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 B 0 0 0 0
+0 0 0 o o o 0 0 0 0 0 0 0 0 0 B 0 0 0 0
+V V V V V V V V V V V V V V V V V V V V
+V V V V V V V V V V V V V V V V V V V V
 
