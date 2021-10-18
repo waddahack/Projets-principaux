@@ -41,7 +41,7 @@ public class Game {
         ennemiesDead = new ArrayList<Ennemie>();
         life = 100;
         money = 20000;
-        waveNumber = 20;
+        waveNumber = 50;
         waveReward = 200;
         gameOver = false;
         initOverlays();
