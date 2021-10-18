@@ -33,6 +33,7 @@ public class Towser{
     
     public static State state = State.MENU;
     public static int windWidth = 1000, windHeight = 800; // Width and Height divisible by unite in Game.java
+    public static double lastUpdate, updateRate = 10;
     public static Menu menu;
     public static Game game;
     private static Map<String, Texture> textures;
@@ -52,15 +53,19 @@ public class Towser{
             System.exit(1);
         }
         initTextures();
+        initColors();
         init();
         setUpFont();
 
         while(!Display.isCloseRequested()){
-            checkInput();
-            render();
-            
-            Display.update();
-            Display.sync(60);
+            if(System.currentTimeMillis() - lastUpdate >= updateRate){
+                checkInput();
+                render();
+
+                Display.update();
+                Display.sync(60);
+                lastUpdate = System.currentTimeMillis();
+            }
         }
         releaseTextures();
         exit();
@@ -74,6 +79,11 @@ public class Towser{
         glMatrixMode(GL_MODELVIEW);
         menu = new Menu();
         game = new Game(1);
+        lastUpdate = System.currentTimeMillis();
+        
+    }
+    
+    private static void initColors(){
         colors = new HashMap<String, ArrayList<Float>>();
         ArrayList<Float> blueDark = new ArrayList<Float>();
         ArrayList<Float> blue = new ArrayList<Float>();

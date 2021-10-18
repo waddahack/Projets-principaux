@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.opengl.Texture;
 import static towser.Towser.windHeight;
@@ -25,6 +26,7 @@ public class Game {
     private static ArrayList<Tower> towers, towersDestroyed;
     private static ArrayList<Ennemie> ennemies, ennemiesDead;
     private static ArrayList<Tile> path;
+    private static boolean gameOver;
     private boolean towerSelected = false, inWave = false, renderOverlay = false, dontPlace = false;
     private ArrayList<Wave> waves;
     private ArrayList<Overlay> overlays;
@@ -38,9 +40,10 @@ public class Game {
         ennemies = new ArrayList<Ennemie>();
         ennemiesDead = new ArrayList<Ennemie>();
         life = 100;
-        money = 200;
-        waveNumber = 1;
+        money = 20000;
+        waveNumber = 30;
         waveReward = 200;
+        gameOver = false;
         initOverlays();
     }
     
@@ -216,6 +219,8 @@ public class Game {
     }
     
     public void render(){
+        if(gameOver)
+            gameOver();
         int i, j;
         Ennemie e;
         for(i = 0 ; i < mapH ; i++){
@@ -413,7 +418,8 @@ public class Game {
     private void startWave(){
         int i, poidEnnemie = (int) Math.pow(waveNumber, 2), nbEnnemie = poidEnnemie/Math.floorDiv(5+waveNumber, 5);
         waves = new ArrayList<Wave>();
-        if(waveNumber >= 10) nbEnnemie = poidEnnemie/3;
+        if(waveNumber >= 10)
+            nbEnnemie = poidEnnemie/3;
         Wave wave = new Wave(nbEnnemie, 0);
         ennemies = (ArrayList<Ennemie>) wave.getEnnemies().clone();
         waves.add(wave);
@@ -452,7 +458,7 @@ public class Game {
     public static void getAttackedBy(int p){
         life -= p;
         if(life <= 0)
-            gameOver();
+            gameOver = true;
     }
 
     private static void gameOver(){
@@ -460,7 +466,7 @@ public class Game {
         int i;
         for(i = 0 ; i < ennemies.size() ; i++)
             ennemies.get(i).die();
-        Towser.game = null;
+        Towser.game = new Game(1);
     }
     
     public static ArrayList<Tower> getTowers(){

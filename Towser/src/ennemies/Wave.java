@@ -14,7 +14,6 @@ public class Wave extends Thread{
     public Wave(int nbEnnemies, int ennemyType){
         super();
         this.nbEnnemies = nbEnnemies;
-        this.speedRatio = speedRatio;
         ennemies = new ArrayList<Ennemie>();
         int i;
         switch(ennemyType){
@@ -39,7 +38,7 @@ public class Wave extends Thread{
                     ennemies.add(new BasicEnnemie());
                 break;
         }
-        speedRatio = ennemies.get(0).getSpeedRatio();
+        speedRatio = ennemies.get(0).getSpeedRatio()/50;
     }
     
     public ArrayList<Ennemie> getEnnemies(){

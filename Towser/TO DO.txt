@@ -15,3 +15,9 @@ STYLE :
 
 - Changer la police de... tout.
 /!\ - Mettre une ligne de void en dessous pour mettre les overlay des tours
+
+OPTIMISATION
+
+/!\ /!\ - Ne pas faire un thread par ennemie et donc faire le render dans la classe Ennemie.
+- game->startWave->add l'ennemie comme ça puis toutes les x ms, trier la liste d'ennemie en fonction de leur indiceTuile
+- Revoir systeme de vague
