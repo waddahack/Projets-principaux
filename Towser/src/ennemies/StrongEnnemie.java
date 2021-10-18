@@ -11,7 +11,7 @@ public class StrongEnnemie extends Ennemie{
         reward = 6;
         power = 3;
         shootRate = 1;
-        moveSpeed = 0.7f;
+        moveSpeed = 2;
         range = 30;
         life = 130;
         id = 22;

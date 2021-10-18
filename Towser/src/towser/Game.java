@@ -41,7 +41,7 @@ public class Game {
         ennemiesDead = new ArrayList<Ennemie>();
         life = 100;
         money = 20000;
-        waveNumber = 30;
+        waveNumber = 20;
         waveReward = 200;
         gameOver = false;
         initOverlays();
@@ -116,6 +116,7 @@ public class Game {
     private void searchPath(){
         path = new ArrayList<Tile>();
         Tile tile = spawn;
+        path.add(tile);
         int i = Math.floorDiv((int)spawn.getY(), unite), j = Math.floorDiv((int)spawn.getX(), unite);
         while(tile != base){
             if(i < map.size()-1 && map.get(i+1).get(j).getType() == "road" && !path.contains(map.get(i+1).get(j))) // check en bas
@@ -128,8 +129,7 @@ public class Game {
                 tile = map.get(i-1).get(j);
             else // sinon c'est la base
                 tile = base;
-            if(tile != base)
-                path.add(tile);
+            path.add(tile);
             i = Math.floorDiv((int)tile.getY(), unite);
             j = Math.floorDiv((int)tile.getX(), unite);
         }
@@ -173,7 +173,27 @@ public class Game {
         }
     }
     
-    public void checkInput(){
+    public void update(){
+        checkInput();
+        // Wave check
+        if(waves != null){
+            int i = 0;
+            while(i < waves.size() && waves.get(i).isDone())
+                i++;
+            if(i == waves.size()){
+                inWave = false;
+                waves = null;
+                money += waveReward;
+                waveNumber++;
+            }
+        }
+        if(inWave)
+            for(Wave w : waves)
+                w.update();
+        render();
+    }
+    
+    private void checkInput(){
         clearArrays();
         // Towers placement
         for(Tower t : towers){
@@ -204,21 +224,9 @@ public class Game {
                     if(t.isSelected() && t.isPlaced()) t.checkOverlayInput();
             checkOverlaysInput();
         }
-        // Wave check
-        if(waves != null){
-            int i = 0;
-            while(i < waves.size() && waves.get(i).isDone())
-                i++;
-            if(i == waves.size()){
-                inWave = false;
-                waves = null;
-                money += waveReward;
-                waveNumber++;
-            }
-        }
     }
     
-    public void render(){
+    private void render(){
         if(gameOver)
             gameOver();
         int i, j;
@@ -249,14 +257,75 @@ public class Game {
         renderOverlays();
     }
     
-    private void clearArrays(){
-        int i;
-        for(i = 0 ; i < ennemiesDead.size() ; i++)
-            ennemies.remove(ennemiesDead.get(i));
-        ennemiesDead.clear();
-        for(i = 0 ; i < towersDestroyed.size() ; i++)
-            towers.remove(towersDestroyed.get(i));
-        towersDestroyed.clear();
+    public void renderOverlays(){
+        for(Overlay o : overlays)
+            o.render(); 
+        overlays.get(0).render();
+        String t;
+        Overlay o;
+        
+        // Overlay 1
+        o = overlays.get(0);
+        t = "TOURS";
+        o.drawText(o.getW()/2-Towser.normalL.getWidth(t)/2, o.getMargin()-Towser.normalL.getHeight(t), t, Towser.normalL);
+        
+        t = BasicTower.priceP+"*";
+        o.drawText(o.getMargin()-Towser.price.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.price);
+        
+        t = CircleTower.priceP+"*";
+        o.drawText(o.getMargin()*3-Towser.price.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.price);
+        //
+        // Overlay 2
+        o = overlays.get(1);
+        t = money+"*";
+        o.drawText(o.getW()/5-Towser.astres.getWidth(t)/2, o.getH()/2-Towser.astres.getHeight(t)/2, t, Towser.astres);
+        
+        t = life+"";
+        o.drawText(2*o.getW()/5-Towser.life.getWidth(t)/2, o.getH()/2-Towser.life.getHeight(t)/2, t, Towser.life);
+        
+        t = "Vague n°"+waveNumber;
+        o.drawText(3*o.getW()/5-Towser.normalL.getWidth(t)/2, o.getH()/2-Towser.normalL.getHeight(t)/2, t, Towser.normalL);
+        //
+    }
+    
+    public void checkOverlaysInput(){
+        Overlay o;
+        Button but;
+        // Overlay 1
+        o = overlays.get(0);
+        but = o.getButtons().get(0);
+        if(but.isClicked(0)){
+            if(but.getText() == ">>"){
+                o.updateCoords(+(o.getW()-unite), 0);
+                o.setButton(0, 0, 25, 50, 30, "brown", "<<");
+            }
+            else{
+                o.updateCoords(-(o.getW()-unite), 0);
+                o.setButton(0, 0, 25, 50, 30, "brown", ">>");
+            }
+            
+        }
+        for(Button b : o.getButtons()){
+            if(b.isClicked(0) && !towerSelected){
+                Tower tower = null;
+                switch(o.getButtons().indexOf(b)){
+                    case 1 :
+                        tower = new BasicTower();
+                        break;
+                    case 2 :
+                        tower = new CircleTower();
+                        break;
+                }
+                if(tower.getPrice() <= money){
+                    towers.add(tower);
+                    towerSelected = true;
+                }
+            }
+        }
+        // Overlay 2
+        o = overlays.get(1);
+        if(o.getButtons().get(0).isClicked(0) && !inWave && !towerSelected && Mouse.getEventButtonState())
+            startWave();
     }
     
     private void createBlock(int x, int y, Tile tile){
@@ -275,6 +344,16 @@ public class Game {
 
             draw(x, y, listeText.get(listeText.size()-1), tile.getAngle());
         }
+    }
+    
+    private void clearArrays(){
+        int i;
+        for(i = 0 ; i < ennemiesDead.size() ; i++)
+            ennemies.remove(ennemiesDead.get(i));
+        ennemiesDead.clear();
+        for(i = 0 ; i < towersDestroyed.size() ; i++)
+            towers.remove(towersDestroyed.get(i));
+        towersDestroyed.clear();
     }
     
     private void draw(int x, int y, float r, float g, float b){
@@ -343,76 +422,6 @@ public class Game {
         overlays.add(o);
     }
     
-    public void checkOverlaysInput(){
-        Overlay o;
-        Button but;
-        // Overlay 1
-        o = overlays.get(0);
-        but = o.getButtons().get(0);
-        if(but.isClicked(0)){
-            if(but.getText() == ">>"){
-                o.updateCoords(+(o.getW()-unite), 0);
-                o.setButton(0, 0, 25, 50, 30, "brown", "<<");
-            }
-            else{
-                o.updateCoords(-(o.getW()-unite), 0);
-                o.setButton(0, 0, 25, 50, 30, "brown", ">>");
-            }
-            
-        }
-        for(Button b : o.getButtons()){
-            if(b.isClicked(0) && !towerSelected){
-                Tower tower = null;
-                switch(o.getButtons().indexOf(b)){
-                    case 1 :
-                        tower = new BasicTower();
-                        break;
-                    case 2 :
-                        tower = new CircleTower();
-                        break;
-                }
-                if(tower.getPrice() <= money){
-                    towers.add(tower);
-                    towerSelected = true;
-                }
-            }
-        }
-        // Overlay 2
-        o = overlays.get(1);
-        if(o.getButtons().get(0).isClicked(0) && !inWave && !towerSelected && Mouse.getEventButtonState())
-            startWave();
-    }
-    
-    public void renderOverlays(){
-        for(Overlay o : overlays)
-            o.render(); 
-        overlays.get(0).render();
-        String t;
-        Overlay o;
-        
-        // Overlay 1
-        o = overlays.get(0);
-        t = "TOURS";
-        o.drawText(o.getW()/2-Towser.normalL.getWidth(t)/2, o.getMargin()-Towser.normalL.getHeight(t), t, Towser.normalL);
-        
-        t = BasicTower.priceP+"*";
-        o.drawText(o.getMargin()-Towser.price.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.price);
-        
-        t = CircleTower.priceP+"*";
-        o.drawText(o.getMargin()*3-Towser.price.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.price);
-        //
-        // Overlay 2
-        o = overlays.get(1);
-        t = money+"*";
-        o.drawText(o.getW()/5-Towser.astres.getWidth(t)/2, o.getH()/2-Towser.astres.getHeight(t)/2, t, Towser.astres);
-        
-        t = life+"";
-        o.drawText(2*o.getW()/5-Towser.life.getWidth(t)/2, o.getH()/2-Towser.life.getHeight(t)/2, t, Towser.life);
-        
-        t = "Vague n°"+waveNumber;
-        o.drawText(3*o.getW()/5-Towser.normalL.getWidth(t)/2, o.getH()/2-Towser.normalL.getHeight(t)/2, t, Towser.normalL);
-        //
-    }
     
     @SuppressWarnings("unchecked")
     private void startWave(){
@@ -450,8 +459,7 @@ public class Game {
             }
             waves.add(wave);
         }
-        for(Wave w : waves)
-            w.start();
+
         inWave = true;
     }
     

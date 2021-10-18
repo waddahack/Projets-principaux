@@ -32,8 +32,9 @@ public class Towser{
     }
     
     public static State state = State.MENU;
-    public static int windWidth = 1000, windHeight = 800; // Width and Height divisible by unite in Game.java
-    public static double lastUpdate, updateRate = 10;
+    public static int fps = 60, windWidth = 1000, windHeight = 800; // Width and Height divisible by unite in Game.java
+    private static double lastUpdate;
+    public static double deltaTime;
     public static Menu menu;
     public static Game game;
     private static Map<String, Texture> textures;
@@ -56,16 +57,14 @@ public class Towser{
         initColors();
         init();
         setUpFont();
-
         while(!Display.isCloseRequested()){
-            if(System.currentTimeMillis() - lastUpdate >= updateRate){
-                checkInput();
-                render();
+            lastUpdate = System.currentTimeMillis();
+            checkInput();
+            render();
 
-                Display.update();
-                Display.sync(60);
-                lastUpdate = System.currentTimeMillis();
-            }
+            Display.update();
+            Display.sync(fps);
+            deltaTime = System.currentTimeMillis() - lastUpdate;
         }
         releaseTextures();
         exit();
@@ -114,7 +113,7 @@ public class Towser{
                 menu.render();
                 break;
             case GAME:
-                game.render();
+                game.update();
                 break;
             case EXIT:
                 releaseTextures();
@@ -124,21 +123,21 @@ public class Towser{
     }  
     
     private static void checkInput() {
-        // STATES
+        // ESCAPE MENU
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
             state = State.MENU;
-        // CLICKS
+        // MENU BUTTONS
         if(state == State.MENU){
             if(menu.getStart().isClicked(0))
                 state = State.GAME;
             if(menu.getExit().isClicked(0))
                 state = State.EXIT;
         }
-        // KEYS
+        /*// KEYS
         else if(state == State.GAME){
-            if(game == null) game = new Game(1);
-            game.checkInput();
-        }
+            if(game == null)
+                game = new Game(1);
+        }*/
     }
     
     public static void drawCircle(double x, double y, float radius, ArrayList<Float> rgb){

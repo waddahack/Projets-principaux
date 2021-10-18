@@ -7,11 +7,11 @@ public class FastEnnemie extends Ennemie{
     
     public FastEnnemie(){
         super();
-        speedRatio = 1f;
+        speedRatio = 1;
         reward = 4;
         power = 2;
         shootRate = 1;
-        moveSpeed = 1.36f;
+        moveSpeed = 4;
         range = 30;
         life = 15;
         id = 21;

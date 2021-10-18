@@ -9,20 +9,20 @@ import towers.Tower;
 import towser.Game;
 import towser.Shootable;
 import towser.Tile;
+import towser.Towser;
 
-public abstract class Ennemie extends Thread implements Shootable{
+public abstract class Ennemie implements Shootable{
     
-    protected int reward, power, shootRate, range, life, id, width, indiceTuile = 0;
+    protected int reward, power, shootRate, range, life, id, width, indiceTuile = -1;
     protected Texture sprite = null;
-    protected float moveSpeed;
     protected ArrayList<Float> rgb;
     protected long stopFor = 0;
     protected String name;
-    protected double x, y, xBase, yBase, speedRatio;
+    protected double x, y, xBase, yBase, speedRatio, moveSpeed, stopForStartTime, moveStartTime, checkDirStartTime;
     protected Tile spawn, base;
     protected String dir;
     protected ArrayList<ArrayList<Tile>> map;
-    protected boolean isAimed = false, isSpawned, isMultipleShot;
+    protected boolean isAimed = false, isSpawned, isMultipleShot, started;
     
     public Ennemie(){
         spawn = Game.getSpawn();
@@ -36,6 +36,87 @@ public abstract class Ennemie extends Thread implements Shootable{
             xBase = base.getX()+Game.unite/2;
             yBase = base.getY()+Game.unite/2;
         }
+        started = false;
+        moveStartTime = System.currentTimeMillis();
+        checkDirStartTime = System.currentTimeMillis();
+    }
+    
+    public void update(){
+        if(started){
+            isSpawned = true;
+            if(stopFor > 0 && System.currentTimeMillis() - stopForStartTime >= stopFor){
+                move();
+                stopFor = 0;
+            }
+            move();
+        }
+    }
+    
+    private void move(){
+        if(isOnCenterOfTile() && !isOnSameTile()){
+            indiceTuile += 1;
+            if(isInBase())
+                attack();
+            setPositionInCenterOfTile();
+            chooseDirection();
+            checkDirStartTime = System.currentTimeMillis();
+        }
+        switch(dir){
+            case "down" : 
+                y += moveSpeed*Towser.deltaTime/50;
+                break;
+            case "left" : 
+                x -= moveSpeed*Towser.deltaTime/50;
+                break;
+            case "up" : 
+                y -= moveSpeed*Towser.deltaTime/50;
+                break;
+            case "right" : 
+                x += moveSpeed*Towser.deltaTime/50;
+                break;
+        }
+        moveStartTime = System.currentTimeMillis();
+    }
+    
+    private void chooseDirection(){
+        if(canMoveThrough(0, 1) && dir != "up") // down
+            dir = "down";
+        else if(canMoveThrough(-1, 0) && dir != "right") //  left
+            dir = "left";
+        else if(canMoveThrough(0, -1) && dir != "down") // up
+            dir = "up";
+        else if(canMoveThrough(1, 0) && dir != "left") //  right
+            dir = "right";
+        else
+            die();
+    }
+    
+    private boolean isOnCenterOfTile(){
+        return(Math.floor(x)%Game.unite <= Game.unite/2+1 && Math.floor(x)%Game.unite >= Game.unite/2-1 && Math.floor(y)%Game.unite <= Game.unite/2+1 && Math.floor(y)%Game.unite >= Game.unite/2-1);
+    }
+    
+    private boolean isOnSameTile(){
+        if(indiceTuile == -1)
+            return false;
+        if(isDead())
+            return true;
+        int x = (int) Math.floor(this.x/Game.unite)*Game.unite, y = (int) Math.floor(this.y/Game.unite)*Game.unite;
+        Tile t = Game.getPath().get(indiceTuile);
+        return (x == t.getX() && y == t.getY());
+    }
+    
+    private void setPositionInCenterOfTile(){
+        Tile t = Game.getPath().get(indiceTuile);
+        x = t.getX()+Game.unite/2;
+        y = t.getY()+Game.unite/2;
+    }
+    
+    private boolean canMoveThrough(int dx, int dy){
+        int x = (int) Math.floor(this.x/Game.unite), y = (int) Math.floor(this.y/Game.unite);
+        if(x+dx < 0 || x+dx >= map.get(0).size() || y+dy >= map.size() || y+dy < 0)
+            return false;
+        String tileType = map.get(y+dy).get(x+dx).getType();
+        return (tileType == "road" || tileType == "base");
     }
     
     public boolean isInRangeOf(Tower t){
@@ -45,6 +126,36 @@ public abstract class Ennemie extends Thread implements Shootable{
         cosinus = Math.floor(Math.cos(angle)*1000)/1000;
         sinus = Math.floor(Math.sin(angle)*1000)/1000;
         return (x <= t.getX()+((t.getRange())*Math.abs(cosinus))+moveSpeed && x >= t.getX()-((t.getRange())*Math.abs(cosinus))-moveSpeed && y <= t.getY()+((t.getRange())*Math.abs(sinus))+moveSpeed && y >= t.getY()-((t.getRange())*Math.abs(sinus))-moveSpeed);
+    }
+    
+    public void attack(){
+        Game.getAttackedBy(power);
+        die();
+    }
+    
+    public boolean isInBase(){
+        return (x >= xBase-Game.unite/2 && x <= xBase+Game.unite/2 && y >= yBase-Game.unite/2 && y <= yBase+Game.unite/2);
+    }
+    
+    public void attacked(int power){
+        life -= power;
+        if(life <= 0){
+            die();
+            Game.money += reward;
+        }
+    }
+    
+    public void die(){
+        life = 0;
+        Game.getEnnemiesDead().add(this);
+    }
+    
+    public boolean isDead(){
+        return (life <= 0);
+    }
+    
+    public void setStarted(boolean b){
+        started = b;
     }
     
     public double getSpeedRatio(){
@@ -59,7 +170,7 @@ public abstract class Ennemie extends Thread implements Shootable{
         return indiceTuile;
     }
     
-    public float getMoveSpeed(){
+    public double getMoveSpeed(){
         return moveSpeed;
     }
     
@@ -103,41 +214,12 @@ public abstract class Ennemie extends Thread implements Shootable{
         return null;
     }
     
-    public void attacked(int power){
-        life -= power;
-        if(life <= 0){
-            die();
-            Game.money += reward;
-        }
-    }
-    
     public int getPower(){
         return power;
     }
     
     public boolean isSpawned(){
         return isSpawned;
-    }
-    
-    @Override
-    public void run(){
-        isSpawned = true;
-        while(!isDead()){
-            if(stopFor > 0){
-                try {
-                    Thread.sleep(stopFor);
-                    stopFor = 0;
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Ennemie.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            move();
-            try {
-                Thread.sleep((long) (10/moveSpeed));
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Wave.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }
     
     public int getRange(){
@@ -158,68 +240,7 @@ public abstract class Ennemie extends Thread implements Shootable{
     
     public void stopFor(int t){
         stopFor = t;
-    }
-    
-    private void move(){
-        if((x%Game.unite == Game.unite/2 && y%Game.unite == Game.unite/2)){
-            if(isInBase())
-                attack();
-            chooseDirection();
-            indiceTuile += 1;
-        }
-        switch(dir){
-            case "down" : 
-                y += Math.ceil((float) (Game.unite*moveSpeed)/100f);
-                break;
-            case "left" : 
-                x -= Math.ceil((float) (Game.unite*moveSpeed)/100f);
-                break;
-            case "up" : 
-                y -= Math.ceil((float) (Game.unite*moveSpeed)/100f);
-                break;
-            case "right" : 
-                x += Math.ceil((float) (Game.unite*moveSpeed)/100f);
-                break;
-        }
-    }
-    
-    private void chooseDirection(){
-        if(canMoveThrough(0, 1) && dir != "up") // down
-            dir = "down";
-        else if(canMoveThrough(-1, 0) && dir != "right") //  left
-            dir = "left";
-        else if(canMoveThrough(0, -1) && dir != "down") // up
-            dir = "up";
-        else if(canMoveThrough(1, 0) && dir != "left") //  right
-            dir = "right";
-        else
-            die();
-    }
-    
-    private boolean canMoveThrough(int dx, int dy){
-        int x = (int) Math.floor(this.x/Game.unite), y = (int) Math.floor(this.y/Game.unite);
-        if(x+dx < 0 || x+dx >= map.get(0).size() || y+dy >= map.size() || y+dy < 0)
-            return false;
-        String tileType = map.get(y+dy).get(x+dx).getType();
-        return (tileType == "road" || tileType == "base");
-    }
-    
-    public void attack(){
-        Game.getAttackedBy(power);
-        die();
-    }
-    
-    public boolean isInBase(){
-        return (x >= xBase-Game.unite/2 && x <= xBase+Game.unite/2 && y >= yBase-Game.unite/2 && y <= yBase+Game.unite/2);
-    }
-    
-    public boolean isDead(){
-        return (life <= 0);
-    }
-    
-    public void die(){
-        life = 0;
-        Game.getEnnemiesDead().add(this);
+        stopForStartTime = System.currentTimeMillis();
     }
     
     public boolean isAimed(){

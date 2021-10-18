@@ -8,11 +8,11 @@ public class BasicEnnemie extends Ennemie{
     
     public BasicEnnemie(){
         super();
-        speedRatio = 0.8f;
+        speedRatio = 0.8;
         reward = 2;
         power = 1;
         shootRate = 1;
-        moveSpeed = 1;
+        moveSpeed = 2.7;
         range = 30;
         life = 10;
         id = 20;

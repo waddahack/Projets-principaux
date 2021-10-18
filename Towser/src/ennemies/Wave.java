@@ -5,63 +5,63 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Wave extends Thread{
+public class Wave{
     
-    private int nbEnnemies;
+    private int nbEnnemies, index;
     private double speedRatio;
-    private ArrayList<Ennemie> ennemies;
+    private ArrayList<Ennemie> enemies;
+    private double startTime;
     
     public Wave(int nbEnnemies, int ennemyType){
         super();
         this.nbEnnemies = nbEnnemies;
-        ennemies = new ArrayList<Ennemie>();
+        enemies = new ArrayList<Ennemie>();
         int i;
         switch(ennemyType){
             case 0 :
                 for(i = 0 ; i < nbEnnemies ; i++)
-                    ennemies.add(new BasicEnnemie());
+                    enemies.add(new BasicEnnemie());
                 break;
             case 1 :
                 for(i = 0 ; i < nbEnnemies ; i++)
-                    ennemies.add(new FastEnnemie());
+                    enemies.add(new FastEnnemie());
                 break;
             case 2 :
                 for(i = 0 ; i < nbEnnemies ; i++)
-                    ennemies.add(new StrongEnnemie());
+                    enemies.add(new StrongEnnemie());
                 break;
             case 3 :
                 for(i = 0 ; i < nbEnnemies ; i++)
-                    ennemies.add(new TrickyEnnemie());
+                    enemies.add(new TrickyEnnemie());
                 break;
             default :
                 for(i = 0 ; i < nbEnnemies ; i++)
-                    ennemies.add(new BasicEnnemie());
+                    enemies.add(new BasicEnnemie());
                 break;
         }
-        speedRatio = ennemies.get(0).getSpeedRatio()/50;
+        speedRatio = enemies.get(0).getSpeedRatio()/50;
+        index = 0;
+        startTime = System.currentTimeMillis();
     }
     
     public ArrayList<Ennemie> getEnnemies(){
-        return ennemies;
+        return enemies;
     }
     
-    @Override
-    public void run(){
-        for(Ennemie e : ennemies){
-            e.start();
-            if(ennemies.indexOf(e) < ennemies.size()-1){
-                try {
-                    Thread.sleep((long) (1000*speedRatio));
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Wave.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+    public void update(){
+        if(System.currentTimeMillis() - startTime >= 1000*speedRatio && index < enemies.size()){
+            enemies.get(index).setStarted(true);
+            startTime = System.currentTimeMillis();
+            index++;
         }
+        for(Ennemie e : enemies)
+            e.update();
     }
     
     public boolean isDone(){
-        for(Ennemie e : ennemies)
-            if(!e.isDead()) return false;
+        for(Ennemie e : enemies)
+            if(!e.isDead())
+                return false;
         return true;
     }
 }

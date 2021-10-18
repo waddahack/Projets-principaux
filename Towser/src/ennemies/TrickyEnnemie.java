@@ -7,11 +7,11 @@ public class TrickyEnnemie extends Ennemie{
     
     public TrickyEnnemie(){
         super();
-        speedRatio = 2.5f;
+        speedRatio = 2.5;
         reward = 10;
         power = 8;
         shootRate = 1;
-        moveSpeed = 1.2f;
+        moveSpeed = 3.3;
         range = 30;
         life = 35;
         id = 23;
@@ -34,8 +34,8 @@ public class TrickyEnnemie extends Ennemie{
                 e.setIndiceTuile(indiceTuile);
                 e.setDir(dir);
                 Game.getEnnemies().add(e);
-                e.start();
-                if(i > 0) e.stopFor(i*250);
+                e.setStarted(true);
+                e.stopFor(i*250);
             }
         }
     }
