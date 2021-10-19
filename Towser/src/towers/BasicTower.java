@@ -27,9 +27,9 @@ public class BasicTower extends Tower{
         follow = false;
         isMultipleShot = false;
         rgb = Towser.colors.get("blue");
-        ArrayList<Float> prices = new ArrayList<Float>();
-        ArrayList<Float> priceMultipliers = new ArrayList<Float>();
-        ArrayList<Float> multipliers = new ArrayList<Float>();
+        ArrayList<Float> prices = new ArrayList<>();
+        ArrayList<Float> priceMultipliers = new ArrayList<>();
+        ArrayList<Float> multipliers = new ArrayList<>();
         prices.add(100f); // range
         prices.add(180f); // power
         prices.add(150f); // shoot rate

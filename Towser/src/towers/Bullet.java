@@ -1,6 +1,6 @@
 package towers;
 
-import ennemies.Ennemie;
+import ennemies.Enemy;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,11 +69,15 @@ public class Bullet{
         }
     }
     
-    public void render(){
+    public void update(){
         if(System.currentTimeMillis()-rdyToMove >= 10){
             move();
-            Towser.drawFilledCircle(x, y, radius, rgb, 1f);
+            render();
         }
+    }
+    
+    private void render(){
+        Towser.drawFilledCircle(x, y, radius, rgb, 1f);
     }
     
     public double getRdyToMove(){
@@ -105,8 +109,8 @@ public class Bullet{
     private boolean hasTouched(double angle){
         double cosinus = Math.abs(Math.cos(angle)), sinus = Math.abs(Math.sin(angle));
         if(!follow){
-            ArrayList<Ennemie> ennemies = Game.getEnnemies();
-            Ennemie e;
+            ArrayList<Enemy> ennemies = Game.getEnnemies();
+            Enemy e;
             int i;
             double xDiff, yDiff;
             for(i = 0 ; i < ennemies.size() ; i++){

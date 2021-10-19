@@ -3,9 +3,9 @@ package ennemies;
 import java.util.ArrayList;
 import towser.Game;
 
-public class StrongEnnemie extends Ennemie{
+public class StrongEnemy extends Enemy{
     
-    public StrongEnnemie(){
+    public StrongEnemy(){
         super();
         speedRatio = 2;
         reward = 6;
@@ -14,8 +14,8 @@ public class StrongEnnemie extends Ennemie{
         moveSpeed = 2;
         range = 30;
         life = 130;
-        id = 22;
-        width = Game.unite/2-Game.unite/8;
+        weight = 2.5;
+        width = Game.unite-Game.unite/4;
         rgb = new ArrayList<Float>();
         rgb.add(0.4f);
         rgb.add(0.9f);

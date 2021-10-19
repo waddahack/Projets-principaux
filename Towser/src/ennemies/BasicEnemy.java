@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import towser.Game;
 
 
-public class BasicEnnemie extends Ennemie{
+public class BasicEnemy extends Enemy{
     
-    public BasicEnnemie(){
+    public BasicEnemy(){
         super();
         speedRatio = 0.8;
         reward = 2;
@@ -15,8 +15,8 @@ public class BasicEnnemie extends Ennemie{
         moveSpeed = 2.7;
         range = 30;
         life = 10;
-        id = 20;
-        width = Game.unite/2-Game.unite/6;
+        weight = 1;
+        width = Game.unite-Game.unite/3;
         rgb = new ArrayList<Float>();
         rgb.add(1f);
         rgb.add(0.7f);

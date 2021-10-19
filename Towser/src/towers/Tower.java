@@ -1,7 +1,7 @@
 package towers;
 
 import towser.Tile;
-import ennemies.Ennemie;
+import ennemies.Enemy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +27,8 @@ public abstract class Tower extends Tile implements Shootable{
     protected double lastShoot = 0;
     protected float shootRate;
     protected String name;
-    protected boolean isPlaced = false, renderIt = true, follow, selected = true, isMultipleShot, canRotate;
-    protected Ennemie enemyAimed;
+    protected boolean isPlaced = false, follow, selected = true, isMultipleShot, canRotate;
+    protected Enemy enemyAimed;
     protected ArrayList<Bullet> bullets = new ArrayList<Bullet>(), bulletsToRemove = new ArrayList<Bullet>();
     protected Overlay overlay;
     protected Texture textureStatic;
@@ -42,283 +42,17 @@ public abstract class Tower extends Tile implements Shootable{
         upgradesParam = new HashMap<String, ArrayList<Float>>();
     }
     
-    public String getName(){
-        return name;
-    }
-    
-    public int getPrice(){
-        return price;
-    }
-    
-    public int getPower(){
-        return power;
-    }
-    
-    public boolean isMultipleShot(){
-        return isMultipleShot;
-    }
-    
-    public float getShootRate(){
-        return shootRate;
-    }
-    
-    public int getLife(){
-        return life;
-    }
-    
-    public int getRange(){
-        return range;
-    }
-    
-    public void attacked(int power){
-        this.life -= power;
-        if(life <= 0)
-            die();
-    }
-    
-    public ArrayList<Bullet> getBullets(){
-        return bullets;
-    }
-    
-    public ArrayList<Bullet> getBulletsToRemove(){
-        return bulletsToRemove;
-    }
-    
-    public void searchAndShoot(ArrayList<Ennemie> enemies){
-        int i;
-        ArrayList<Ennemie> enemiesInRange = new ArrayList<Ennemie>();
-        Ennemie first;
-        if(enemies != null && !enemies.isEmpty()){
-            i = 0;
-            while(i < enemies.size()){
-                if(enemies.get(i).isSpawned() && enemies.get(i).isInRangeOf(this))
-                    enemiesInRange.add(enemies.get(i));
-                i++;
-            }
-            if(!enemiesInRange.isEmpty()){
-                first = enemiesInRange.get(0);
-                for(i = 0 ; i < enemiesInRange.size() ; i++)
-                    if(enemiesInRange.get(i).getIndiceTuile() > first.getIndiceTuile())
-                        first = enemiesInRange.get(i);
-                aim(first);
-            }
-            else
-                aim(null);
+    public void update(){
+        if(isPlaced){
+            if(selected)
+                checkOverlayInput();
+            searchAndShoot();
+            updateBullets();
         }
-        else
-            aim(null);
-        if(enemyAimed != null && !enemyAimed.isDead() && enemyAimed.isInRangeOf(this) && canShoot())
-            shoot();
+        render();
     }
     
-    public void aim(Ennemie e){
-        if(e == null && enemyAimed != null)
-            enemyAimed.setIsAimed(false);
-        enemyAimed = e;
-        if(e != null){
-            e.setIsAimed(true);
-            if(canRotate){
-                double t = 0.3;
-                newAngle = Math.toDegrees(Math.atan2(enemyAimed.getY()-y, enemyAimed.getX()-x));
-                
-                if(newAngle-angle > 180)
-                    newAngle -= 360;
-                else if(angle-newAngle > 180)
-                    newAngle += 360;
-                
-                angle = (1-t)*angle + t*newAngle;
-                
-                if(angle >= 360)
-                    angle -= 360;
-                else if(angle <= -360)
-                    angle += 360;
-                
-                angle = Math.round(angle);
-                newAngle = Math.round(newAngle);
-            }
-        }   
-    }
-    
-    public void setFollow(boolean b){
-        follow = b;
-    }
-    
-    @Override
-    public boolean getFollow(){
-        return follow;
-    }
-    
-    public boolean canShoot(){
-        return (System.currentTimeMillis()-lastShoot >= 1000/shootRate && angle >= newAngle-4 && angle <= newAngle+4);
-    }
-    
-    public void shoot(){
-        lastShoot = System.currentTimeMillis();
-        Bullet bullet = new Bullet(this, enemyAimed, 5, rgb);
-        bullets.add(bullet);
-    }
-    
-    public void renderBullets(){
-        int i;
-        Bullet b;
-        for(i = 0 ; i < bulletsToRemove.size() ; i++){
-            bullets.remove(bulletsToRemove.get(i));
-        }
-        bulletsToRemove.clear();
-        
-        for(i = 0 ; i < bullets.size() ; i++)
-            bullets.get(i).render();
-    }
-    
-    public Ennemie getEnemyAimed(){
-        return enemyAimed;
-    }
-    
-    public boolean isDead(){
-        return (life <= 0);
-    }
-    
-    public int getBulletSpeed(){
-        return bulletSpeed;
-    }
-    
-    public void render(){
-        if(renderIt){
-            int xPos = Math.floorDiv((int) x, Game.unite)*Game.unite, yPos = Math.floorDiv((int) y, Game.unite)*Game.unite;
-            textureStatic.bind();
-            glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
-            glEnable(GL_TEXTURE_2D);
-            glBegin(GL_QUADS);
-                glTexCoord2f(0, 0);
-                glVertex2d(xPos, yPos);
-                glTexCoord2f(1, 0);
-                glVertex2d(xPos+Game.unite, yPos);
-                glTexCoord2f(1, 1);
-                glVertex2d(xPos+Game.unite, yPos+Game.unite);
-                glTexCoord2f(0, 1);
-                glVertex2d(xPos, yPos+Game.unite);
-            glEnd();
-            glDisable(GL_TEXTURE_2D);  
-        }
-        x += Mouse.getDX();
-        y -= Mouse.getDY();
-    }
-    
-    public void place(ArrayList<ArrayList<Tile>> map){
-        x = Math.floorDiv((int)x, Game.unite);
-        y = Math.floorDiv((int)y, Game.unite);
-        map.get((int) y).set((int) x, this);
-        x = x*Game.unite+Game.unite/2;
-        y = y*Game.unite+Game.unite/2;
-        isPlaced = true;
-        initOverlay();
-        Game.money -= price;
-        raisePrice();
-    }
-    
-    protected void raisePrice(){
-        
-    }
-    
-    public boolean canBePlaced(){
-        boolean bool = false;
-        String tileType = Game.getMap().get(Math.floorDiv((int)y, Game.unite)).get(Math.floorDiv((int) x, Game.unite)).getType(); // middle point
-        if(isInWindow() && tileType == "grass")
-            bool = true;
-        renderIt = bool;
-        return bool;
-    }
-    
-    public boolean isPlaced(){
-        return isPlaced;
-    }
-
-    private boolean isInWindow() {
-        return (x < Towser.windWidth && x > 0 && y < Towser.windHeight && y > 0);
-    }
-    
-    public void destroy(){
-        Game.getTowersDestroyed().add(this);
-    }
-   
-    private boolean isMouseIn(){
-        int MX = Mouse.getX(), MY = Towser.windHeight-Mouse.getY();
-        return (MX >= x-Game.unite/2 && MX <= x+Game.unite/2 && MY >= y-Game.unite/2 && MY <= y+Game.unite/2);
-    }
-    
-    public boolean isClicked(int but){
-        return (isMouseIn() && Mouse.isButtonDown(but));
-    }
-    
-    public void die(){
-        destroy();
-    }
-    
-    public void setSelected(boolean b){
-        selected = b;
-    }
-    
-    public void renderDetails(){
-        if(selected && renderIt){
-            Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range, Towser.colors.get("blue"));
-            Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-1, Towser.colors.get("grey"));
-            Towser.drawCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-2, Towser.colors.get("grey_light"));
-            Towser.drawFilledCircle(Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2, Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2, range-2, Towser.colors.get("grey_light"), 0.1f);
-            if(isPlaced)
-                renderOverlay();
-        }
-    }
-    
-    public void initOverlay(){
-    }
-    
-    public void renderOverlay(){
-        int tX = overlay.getMargin(), tY = overlay.getH()/3;
-        String t = "";
-        float upPrice;
-        Button b;
-        overlay.render();
-        
-        overlay.drawText(overlay.getW()/2-Towser.normalL.getWidth(name)/2, overlay.getMargin()-Towser.normalL.getHeight(name)/2, name, Towser.normalL);
-        
-        for(int i = 0 ; i < nbUpgrades ; i++){
-            switch(i){
-                case 0:
-                    t = "Range : "+range;
-                    break;
-                case 1:
-                    t = "Power : "+power;
-                    break;
-                case 2:
-                    t = "Shoot rate : "+shootRate;
-                    break;
-                case 3:
-                    t = "Bullet speed : "+bulletSpeed;
-                    break;
-            }
-            upPrice = upgradesParam.get("prices").get(i);
-            overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2+overlay.getButtons().get(0).getH()*i+overlay.getMargin()*i, t, Towser.normal);
-            b = overlay.getButtons().get(i);
-            if(upPrice != 0 && !b.isHidden()){
-                t = (int)Math.floor(upPrice)+"*";
-                overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
-            }
-        }
-    }
-    
-    public boolean isSelected(){
-        return selected;
-    }
-    
-    public int getWidth(){
-        return width;
-    }
-    
-    public Overlay getOverlay(){
-        return overlay;
-    }
-    
-    public void checkOverlayInput(){
+    private void checkOverlayInput(){
         ArrayList<Button> buts = overlay.getButtons();
         Button b;
         String name = "";
@@ -371,5 +105,302 @@ public abstract class Tower extends Tile implements Shootable{
                 }
             }
         }
+    }
+    
+    public void searchAndShoot(){
+        int i;
+        ArrayList<Enemy> enemies = Game.getEnnemies();
+        ArrayList<Enemy> enemiesInRange = new ArrayList<Enemy>();
+        Enemy first;
+        if(enemies != null && !enemies.isEmpty()){
+            i = 0;
+            while(i < enemies.size()){
+                if(enemies.get(i).isSpawned() && enemies.get(i).isInRangeOf(this))
+                    enemiesInRange.add(enemies.get(i));
+                i++;
+            }
+            if(!enemiesInRange.isEmpty()){
+                first = enemiesInRange.get(0);
+                for(i = 0 ; i < enemiesInRange.size() ; i++)
+                    if(enemiesInRange.get(i).getIndiceTuile() > first.getIndiceTuile())
+                        first = enemiesInRange.get(i);
+                aim(first);
+            }
+            else
+                aim(null);
+        }
+        else
+            aim(null);
+        if(enemyAimed != null && !enemyAimed.isDead() && enemyAimed.isInRangeOf(this) && canShoot())
+            shoot();
+    }
+    
+    public void aim(Enemy e){
+        if(e == null && enemyAimed != null)
+            enemyAimed.setIsAimed(false);
+        enemyAimed = e;
+        if(e != null){
+            e.setIsAimed(true);
+            if(canRotate){
+                double t = 0.3;
+                newAngle = Math.toDegrees(Math.atan2(enemyAimed.getY()-y, enemyAimed.getX()-x));
+                
+                if(newAngle-angle > 180)
+                    newAngle -= 360;
+                else if(angle-newAngle > 180)
+                    newAngle += 360;
+                
+                angle = (1-t)*angle + t*newAngle;
+                
+                if(angle >= 360)
+                    angle -= 360;
+                else if(angle <= -360)
+                    angle += 360;
+                
+                angle = Math.round(angle);
+                newAngle = Math.round(newAngle);
+            }
+        }   
+    }
+    
+    public void render(){
+        if(!isPlaced)
+            renderPrevisu();
+        
+        if(selected && (isPlaced || canBePlaced()))
+            renderDetails();
+    }
+    
+    
+    
+    private void renderPrevisu(){
+        if(canBePlaced()){
+            int xPos = Math.floorDiv((int) x, Game.unite)*Game.unite, yPos = Math.floorDiv((int) y, Game.unite)*Game.unite;
+            textureStatic.bind();
+            glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+            glEnable(GL_TEXTURE_2D);
+            glBegin(GL_QUADS);
+                glTexCoord2f(0, 0);
+                glVertex2d(xPos, yPos);
+                glTexCoord2f(1, 0);
+                glVertex2d(xPos+Game.unite, yPos);
+                glTexCoord2f(1, 1);
+                glVertex2d(xPos+Game.unite, yPos+Game.unite);
+                glTexCoord2f(0, 1);
+                glVertex2d(xPos, yPos+Game.unite);
+            glEnd();
+            glDisable(GL_TEXTURE_2D);
+        }
+        x += Mouse.getDX();
+        y -= Mouse.getDY();
+    }
+    
+    public void renderDetails(){
+        int xPos = (int)x, yPos = (int)y;
+        if(!isPlaced){
+            xPos = Math.floorDiv((int) x, Game.unite)*Game.unite+Game.unite/2;
+            yPos = Math.floorDiv((int) y, Game.unite)*Game.unite+Game.unite/2;
+        }
+        Towser.drawCircle(xPos, yPos, range, Towser.colors.get("blue"));
+        Towser.drawCircle(xPos, yPos, range-1, Towser.colors.get("grey"));
+        Towser.drawCircle(xPos, yPos, range-2, Towser.colors.get("grey_light"));
+        Towser.drawFilledCircle(xPos, yPos, range-2, Towser.colors.get("grey_light"), 0.1f);
+        if(isPlaced)
+            renderOverlay();
+    }
+    
+    public void renderOverlay(){
+        int tX = overlay.getMargin(), tY = overlay.getH()/3;
+        String t = "";
+        float upPrice;
+        Button b;
+        
+        overlay.render();
+        
+        overlay.drawText(overlay.getW()/2-Towser.normalL.getWidth(name)/2, overlay.getMargin()-Towser.normalL.getHeight(name)/2, name, Towser.normalL);
+        
+        for(int i = 0 ; i < nbUpgrades ; i++){
+            switch(i){
+                case 0:
+                    t = "Range : "+range;
+                    break;
+                case 1:
+                    t = "Power : "+power;
+                    break;
+                case 2:
+                    t = "Shoot rate : "+shootRate;
+                    break;
+                case 3:
+                    t = "Bullet speed : "+bulletSpeed;
+                    break;
+            }
+            upPrice = upgradesParam.get("prices").get(i);
+            overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2+overlay.getButtons().get(0).getH()*i+overlay.getMargin()*i, t, Towser.normal);
+            b = overlay.getButtons().get(i);
+            if(upPrice != 0 && !b.isHidden()){
+                t = (int)Math.floor(upPrice)+"*";
+                overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
+            }
+        }
+    }
+    
+    public void updateBullets(){
+        for(Bullet b : bulletsToRemove)
+            bullets.remove(b);
+
+        bulletsToRemove.clear();
+        
+        for(Bullet b : bullets)
+            b.update();
+    }
+    
+    public void place(ArrayList<ArrayList<Tile>> map){
+        x = Math.floorDiv((int)x, Game.unite);
+        y = Math.floorDiv((int)y, Game.unite);
+        map.get((int) y).set((int) x, this);
+        x = x*Game.unite+Game.unite/2;
+        y = y*Game.unite+Game.unite/2;
+        isPlaced = true;
+        initOverlay();
+        Game.money -= price;
+        raisePrice();
+    }
+    
+    public boolean canBePlaced(){
+        boolean bool = false;
+        String tileType = Game.getMap().get(Math.floorDiv((int)y, Game.unite)).get(Math.floorDiv((int) x, Game.unite)).getType(); // middle point
+        if(isInWindow() && tileType == "grass")
+            bool = true;
+        return bool;
+    }
+    
+    public boolean isPlaced(){
+        return isPlaced;
+    }
+
+    private boolean isInWindow() {
+        return (x < Towser.windWidth && x > 0 && y < Towser.windHeight && y > 0);
+    }
+    
+    public void destroy(){
+        Game.getTowersDestroyed().add(this);
+    }
+   
+    private boolean isMouseIn(){
+        int MX = Mouse.getX(), MY = Towser.windHeight-Mouse.getY();
+        return (MX >= x-Game.unite/2 && MX <= x+Game.unite/2 && MY >= y-Game.unite/2 && MY <= y+Game.unite/2);
+    }
+    
+    public boolean isClicked(int but){
+        return (isMouseIn() && Mouse.isButtonDown(but));
+    }
+    
+    public void die(){
+        destroy();
+    }
+    
+    public void setSelected(boolean b){
+        selected = b;
+    }
+    
+    public void initOverlay(){
+    }
+    
+    public boolean isSelected(){
+        return selected;
+    }
+    
+    @Override
+    public int getWidth(){
+        return width;
+    }
+    
+    public void setFollow(boolean b){
+        follow = b;
+    }
+    
+    @Override
+    public boolean getFollow(){
+        return follow;
+    }
+    
+    public boolean canShoot(){
+        return (System.currentTimeMillis()-lastShoot >= 1000/shootRate && angle >= newAngle-4 && angle <= newAngle+4);
+    }
+    
+    public void shoot(){
+        lastShoot = System.currentTimeMillis();
+        Bullet bullet = new Bullet(this, enemyAimed, 5, rgb);
+        bullets.add(bullet);
+    }
+    
+    public Enemy getEnemyAimed(){
+        return enemyAimed;
+    }
+    
+    @Override
+    public boolean isDead(){
+        return (life <= 0);
+    }
+    
+    @Override
+    public int getBulletSpeed(){
+        return bulletSpeed;
+    }
+    
+    public Overlay getOverlay(){
+        return overlay;
+    }
+    
+    public String getName(){
+        return name;
+    }
+    
+    public int getPrice(){
+        return price;
+    }
+    
+    @Override
+    public int getPower(){
+        return power;
+    }
+    
+    @Override
+    public boolean isMultipleShot(){
+        return isMultipleShot;
+    }
+    
+    public float getShootRate(){
+        return shootRate;
+    }
+    
+    public int getLife(){
+        return life;
+    }
+    
+    @Override
+    public int getRange(){
+        return range;
+    }
+    
+    @Override
+    public void attacked(int power){
+        this.life -= power;
+        if(life <= 0)
+            die();
+    }
+    
+    @Override
+    public ArrayList<Bullet> getBullets(){
+        return bullets;
+    }
+    
+    @Override
+    public ArrayList<Bullet> getBulletsToRemove(){
+        return bulletsToRemove;
+    }
+    
+    protected void raisePrice(){
+        
     }
 }

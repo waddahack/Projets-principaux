@@ -133,11 +133,6 @@ public class Towser{
             if(menu.getExit().isClicked(0))
                 state = State.EXIT;
         }
-        /*// KEYS
-        else if(state == State.GAME){
-            if(game == null)
-                game = new Game(1);
-        }*/
     }
     
     public static void drawCircle(double x, double y, float radius, ArrayList<Float> rgb){

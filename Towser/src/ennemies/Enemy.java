@@ -1,8 +1,6 @@
 package ennemies;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.newdawn.slick.opengl.Texture;
 import towers.Bullet;
 import towers.Tower;
@@ -11,20 +9,22 @@ import towser.Shootable;
 import towser.Tile;
 import towser.Towser;
 
-public abstract class Ennemie implements Shootable{
+public abstract class Enemy implements Shootable{
     
-    protected int reward, power, shootRate, range, life, id, width, indiceTuile = -1;
+    protected int reward, power, shootRate, range, life, width, indiceTuile = -1;
     protected Texture sprite = null;
     protected ArrayList<Float> rgb;
     protected long stopFor = 0;
     protected String name;
-    protected double x, y, xBase, yBase, speedRatio, moveSpeed, stopForStartTime, moveStartTime, checkDirStartTime;
+    protected double x, y, xBase, yBase, speedRatio, moveSpeed, stopForStartTime, moveStartTime, checkDirStartTime, weight;
     protected Tile spawn, base;
     protected String dir;
     protected ArrayList<ArrayList<Tile>> map;
-    protected boolean isAimed = false, isSpawned, isMultipleShot, started;
+    protected boolean isAimed = false, isMultipleShot, started = false;
+    private double movingBy;
+    private boolean debug = false;
     
-    public Ennemie(){
+    public Enemy(){
         spawn = Game.getSpawn();
         base = Game.getBase();
         map = Game.getMap();
@@ -36,20 +36,31 @@ public abstract class Ennemie implements Shootable{
             xBase = base.getX()+Game.unite/2;
             yBase = base.getY()+Game.unite/2;
         }
-        started = false;
         moveStartTime = System.currentTimeMillis();
         checkDirStartTime = System.currentTimeMillis();
     }
     
+    private void showDebug(){
+        //System.out.println("started : " + started);
+        System.out.println("stopFor : " + stopFor);
+    }
+    
     public void update(){
         if(started){
-            isSpawned = true;
             if(stopFor > 0 && System.currentTimeMillis() - stopForStartTime >= stopFor){
                 move();
                 stopFor = 0;
             }
-            move();
+            else if(stopFor <= 0)
+                move();
+            render();
         }
+        if(debug)
+            showDebug();
+    }
+    
+    private void render(){
+        Towser.drawFilledCircle(x, y, width/2, rgb, 1f);
     }
     
     private void move(){
@@ -61,18 +72,19 @@ public abstract class Ennemie implements Shootable{
             chooseDirection();
             checkDirStartTime = System.currentTimeMillis();
         }
+        movingBy = moveSpeed * Towser.deltaTime / 50;
         switch(dir){
             case "down" : 
-                y += moveSpeed*Towser.deltaTime/50;
+                y += movingBy;
                 break;
             case "left" : 
-                x -= moveSpeed*Towser.deltaTime/50;
+                x -= movingBy;
                 break;
             case "up" : 
-                y -= moveSpeed*Towser.deltaTime/50;
+                y -= movingBy;
                 break;
             case "right" : 
-                x += moveSpeed*Towser.deltaTime/50;
+                x += movingBy;
                 break;
         }
         moveStartTime = System.currentTimeMillis();
@@ -92,7 +104,7 @@ public abstract class Ennemie implements Shootable{
     }
     
     private boolean isOnCenterOfTile(){
-        return(Math.floor(x)%Game.unite <= Game.unite/2+1 && Math.floor(x)%Game.unite >= Game.unite/2-1 && Math.floor(y)%Game.unite <= Game.unite/2+1 && Math.floor(y)%Game.unite >= Game.unite/2-1);
+        return(Math.floor(x)%Game.unite <= Game.unite/2+movingBy && Math.floor(x)%Game.unite >= Game.unite/2-movingBy && Math.floor(y)%Game.unite <= Game.unite/2+movingBy && Math.floor(y)%Game.unite >= Game.unite/2-movingBy);
     }
     
     private boolean isOnSameTile(){
@@ -156,6 +168,11 @@ public abstract class Ennemie implements Shootable{
     
     public void setStarted(boolean b){
         started = b;
+        stopForStartTime = System.currentTimeMillis();
+    }
+    
+    public void debug(boolean d){
+        debug = d;
     }
     
     public double getSpeedRatio(){
@@ -219,7 +236,7 @@ public abstract class Ennemie implements Shootable{
     }
     
     public boolean isSpawned(){
-        return isSpawned;
+        return started;
     }
     
     public int getRange(){
@@ -240,7 +257,6 @@ public abstract class Ennemie implements Shootable{
     
     public void stopFor(int t){
         stopFor = t;
-        stopForStartTime = System.currentTimeMillis();
     }
     
     public boolean isAimed(){
@@ -249,5 +265,9 @@ public abstract class Ennemie implements Shootable{
     
     public void setIsAimed(boolean b){
         isAimed = b;
+    }
+    
+    public double getWeight(){
+        return weight;
     }
 }

@@ -3,9 +3,9 @@ package ennemies;
 import java.util.ArrayList;
 import towser.Game;
 
-public class TrickyEnnemie extends Ennemie{
+public class TrickyEnemy extends Enemy{
     
-    public TrickyEnnemie(){
+    public TrickyEnemy(){
         super();
         speedRatio = 2.5;
         reward = 10;
@@ -14,28 +14,28 @@ public class TrickyEnnemie extends Ennemie{
         moveSpeed = 3.3;
         range = 30;
         life = 35;
-        id = 23;
-        width = Game.unite/2-Game.unite/4;
+        weight = 3;
+        width = Game.unite-Game.unite/2;
         rgb = new ArrayList<Float>();
         rgb.add(0.2f);
         rgb.add(0.2f);
         rgb.add(0.8f);
     }
     
+    @Override
     public void die(){
         life = 0;
         Game.getEnnemiesDead().add(this);
         if(!isInBase()){
-            int i;
-            for(i = 0 ; i < 3 ; i++){
-                Ennemie e = new FastEnnemie();
+            for(int i = 0 ; i < 3 ; i++){
+                Enemy e = new FastEnemy();
                 e.setX(x);
                 e.setY(y);
                 e.setIndiceTuile(indiceTuile);
                 e.setDir(dir);
-                Game.getEnnemies().add(e);
+                Game.addEnemie(e);
+                e.stopFor(i*200);
                 e.setStarted(true);
-                e.stopFor(i*250);
             }
         }
     }

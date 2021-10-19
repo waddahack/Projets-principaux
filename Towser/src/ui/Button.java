@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -50,6 +51,13 @@ public class Button {
             Logger.getLogger(Button.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Button.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try{
+            Keyboard.create();
+            Keyboard.enableRepeatEvents(true);
+        }
+        catch(Exception e){
+           
         }
     }
     

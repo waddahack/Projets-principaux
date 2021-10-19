@@ -14,11 +14,17 @@ FEATURES :
 STYLE :
 
 - Changer la police de... tout.
-/!\ - Mettre une ligne de void en dessous pour mettre les overlay des tours
+/!\ - Changer les overlays
 
 OPTIMISATION / REGLAGE BUG /!\ /!\ 
 
-- faire le render dans la classe Ennemie. Réparer TrickyEnnemie (ne fait pas pop de jaune)
-- Quand ça lag, ils loupent le chemin (stocker le delta dans isInCenterOfTile, l'agrandir en fonction de deltaTime, puis dans setPositionEtc, ajouter ça )
 - game->startWave->add l'ennemie comme ça puis toutes les x ms, trier la liste d'ennemie en fonction de leur indiceTuile
 - Revoir systeme de vague
+
+DEBUG : 
+
+- Afficher les fps
+
+LEVEL DESIGN :
+
+- Moins d'ennemies et plus fort

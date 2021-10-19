@@ -1,6 +1,6 @@
 package towser;
 
-import ennemies.Ennemie;
+import ennemies.Enemy;
 import ennemies.Wave;
 import towers.*;
 import java.io.File;
@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
@@ -21,10 +22,10 @@ public class Game {
     
     private static ArrayList<ArrayList<Tile>> map;
     private static Tile spawn, base;
-    public static int unite = 50, money, life, waveNumber, waveReward;
+    public static int unite = 50, money, life, waveNumber, waveReward, nbTower = 2;
     private int mapW = windWidth/unite, mapH = windHeight/unite;
     private static ArrayList<Tower> towers, towersDestroyed;
-    private static ArrayList<Ennemie> ennemies, ennemiesDead;
+    private static ArrayList<Enemy> enemies, ennemiesDead;
     private static ArrayList<Tile> path;
     private static boolean gameOver;
     private boolean towerSelected = false, inWave = false, renderOverlay = false, dontPlace = false;
@@ -37,11 +38,11 @@ public class Game {
         fixRoadSprites();
         towers = new ArrayList<Tower>();
         towersDestroyed = new ArrayList<Tower>();
-        ennemies = new ArrayList<Ennemie>();
-        ennemiesDead = new ArrayList<Ennemie>();
+        enemies = new ArrayList<Enemy>();
+        ennemiesDead = new ArrayList<Enemy>();
         life = 100;
         money = 20000;
-        waveNumber = 50;
+        waveNumber = 5;
         waveReward = 200;
         gameOver = false;
         initOverlays();
@@ -175,6 +176,7 @@ public class Game {
     
     public void update(){
         checkInput();
+        render();
         // Wave check
         if(waves != null){
             int i = 0;
@@ -190,15 +192,25 @@ public class Game {
         if(inWave)
             for(Wave w : waves)
                 w.update();
-        render();
+        for(Enemy e : enemies)
+            e.update();
+        for(Tower t : towers)
+            t.update();
+        
+        renderOverlays();
+        
+        if(gameOver)
+            gameOver();
     }
     
     private void checkInput(){
         clearArrays();
         // Towers placement
         for(Tower t : towers){
-            if(overlays.get(0).getButtons().get(0).isClicked(0)) dontPlace = true;
-            if(dontPlace && !Mouse.isButtonDown(0)) dontPlace = false;
+            if(overlays.get(0).getButtons().get(0).isClicked(0))
+                dontPlace = true;
+            if(dontPlace && !Mouse.isButtonDown(0))
+                dontPlace = false;
             if(!t.isPlaced() && Mouse.isButtonDown(0) && t.canBePlaced() && !overlays.get(0).isClicked(0) && !dontPlace){
                 towerSelected = false;
                 t.place(map);
@@ -211,8 +223,8 @@ public class Game {
                 t.setSelected(true);
         }
         // Click check
-        while(Mouse.next()){
-            // Reinitializing
+        while(Mouse.next() || Keyboard.next()){
+            // Reinitializing if clicking nowhere
             if((Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !overlays.get(1).getButtons().get(0).isClicked(0)){
                 for(Tower t : towers){
                     if(t.isPlaced() && t.isSelected() && !t.getOverlay().isClicked(0) && !overlays.get(0).getButtons().get(0).isClicked(0))
@@ -220,41 +232,15 @@ public class Game {
                 }
             }
             // Overlays inputs
-            for(Tower t : towers)
-                    if(t.isSelected() && t.isPlaced()) t.checkOverlayInput();
             checkOverlaysInput();
         }
     }
     
     private void render(){
-        if(gameOver)
-            gameOver();
-        int i, j;
-        Ennemie e;
-        for(i = 0 ; i < mapH ; i++){
-            for(j = 0 ; j < mapW ; j++)
+        for(int i = 0 ; i < mapH ; i++){
+            for(int j = 0 ; j < mapW ; j++)
                 createBlock(j*unite, i*unite, map.get(i).get(j));
         }
-        for(i = 0 ; i < ennemies.size() ; i++){
-            e = ennemies.get(i);
-            if(e.isSpawned())
-                Towser.drawFilledCircle(e.getX(), e.getY(), e.getWidth(), e.getRGB(), 1f);
-        }
-        for(Tower t : towers){
-            if(!t.isPlaced()){
-                t.canBePlaced();
-                t.render();
-            }
-            else
-                t.searchAndShoot(ennemies);
-            t.renderBullets();
-        }
-        for(Tower t : towers)
-            if(t.isSelected()){
-                t.renderDetails();
-                break;
-            }
-        renderOverlays();
     }
     
     public void renderOverlays(){
@@ -305,22 +291,13 @@ public class Game {
             }
             
         }
-        for(Button b : o.getButtons()){
-            if(b.isClicked(0) && !towerSelected){
-                Tower tower = null;
-                switch(o.getButtons().indexOf(b)){
-                    case 1 :
-                        tower = new BasicTower();
-                        break;
-                    case 2 :
-                        tower = new CircleTower();
-                        break;
-                }
-                if(tower.getPrice() <= money){
-                    towers.add(tower);
-                    towerSelected = true;
-                }
-            }
+        for(Button b : o.getButtons()) // Check tower clicked
+            if((b.isClicked(0)))
+                createTower(o.getButtons().indexOf(b)+1);
+
+        for(int i = 1 ; i <= nbTower ; i++){ // Check tower pressed by keyboard
+            if(Keyboard.isKeyDown(i+1) || Keyboard.isKeyDown(78+i))
+                createTower(Keyboard.getEventKey());  
         }
         // Overlay 2
         o = overlays.get(1);
@@ -349,7 +326,7 @@ public class Game {
     private void clearArrays(){
         int i;
         for(i = 0 ; i < ennemiesDead.size() ; i++)
-            ennemies.remove(ennemiesDead.get(i));
+            enemies.remove(ennemiesDead.get(i));
         ennemiesDead.clear();
         for(i = 0 ; i < towersDestroyed.size() ; i++)
             towers.remove(towersDestroyed.get(i));
@@ -430,37 +407,61 @@ public class Game {
         if(waveNumber >= 10)
             nbEnnemie = poidEnnemie/3;
         Wave wave = new Wave(nbEnnemie, 0);
-        ennemies = (ArrayList<Ennemie>) wave.getEnnemies().clone();
+        enemies = (ArrayList<Enemy>) wave.getEnnemies().clone();
         waves.add(wave);
         if(waveNumber >= 5){
             wave = new Wave((int) Math.floor(nbEnnemie/1.5), 1);
-            for(Ennemie e : wave.getEnnemies()){
+            for(Enemy e : wave.getEnnemies()){
                 i = 0;
-                while(i < ennemies.size() && e.getMoveSpeed() <= ennemies.get(i).getMoveSpeed()) i++;
-                ennemies.add(i, e);
+                while(i < enemies.size() && e.getMoveSpeed() <= enemies.get(i).getMoveSpeed()) i++;
+                enemies.add(i, e);
             }
             waves.add(wave);
         }
         if(waveNumber >= 10){
             wave = new Wave(nbEnnemie/5, 2);
-            for(Ennemie e : wave.getEnnemies()){
+            for(Enemy e : wave.getEnnemies()){
                 i = 0;
-                while(i < ennemies.size() && e.getMoveSpeed() <= ennemies.get(i).getMoveSpeed()) i++;
-                ennemies.add(i, e);
+                while(i < enemies.size() && e.getMoveSpeed() <= enemies.get(i).getMoveSpeed()) i++;
+                enemies.add(i, e);
             }
             waves.add(wave);
         }
         if(waveNumber >= 14){
             wave = new Wave(nbEnnemie/6, 3);
-            for(Ennemie e : wave.getEnnemies()){
+            for(Enemy e : wave.getEnnemies()){
                 i = 0;
-                while(i < ennemies.size() && e.getMoveSpeed() <= ennemies.get(i).getMoveSpeed()) i++;
-                ennemies.add(i, e);
+                while(i < enemies.size() && e.getMoveSpeed() <= enemies.get(i).getMoveSpeed()) i++;
+                enemies.add(i, e);
             }
             waves.add(wave);
         }
 
         inWave = true;
+    }
+    
+    public void createTower(int id){
+        if(towerSelected){
+                for(Tower t : towers)
+                    if(!t.isPlaced())
+                        t.destroy();
+            }
+        Tower tower = null;
+        if(id >= 78)
+            id -= 77;
+        id--;
+        switch(id){
+            case 1 :
+                tower = new BasicTower();
+                break;
+            case 2 :
+                tower = new CircleTower();
+                break;
+        }
+        if(tower != null && tower.getPrice() <= money){
+            towers.add(tower);
+            towerSelected = true;
+        }
     }
     
     public static void getAttackedBy(int p){
@@ -472,9 +473,13 @@ public class Game {
     private static void gameOver(){
         Towser.state = Towser.State.MENU;
         int i;
-        for(i = 0 ; i < ennemies.size() ; i++)
-            ennemies.get(i).die();
+        for(i = 0 ; i < enemies.size() ; i++)
+            enemies.get(i).die();
         Towser.game = new Game(1);
+    }
+    
+    public static void addEnemie(Enemy e){
+        enemies.add(e);
     }
     
     public static ArrayList<Tower> getTowers(){
@@ -485,11 +490,11 @@ public class Game {
         return towersDestroyed;
     }
     
-    public static ArrayList<Ennemie> getEnnemies(){
-        return ennemies;
+    public static ArrayList<Enemy> getEnnemies(){
+        return enemies;
     }
     
-    public static ArrayList<Ennemie> getEnnemiesDead(){
+    public static ArrayList<Enemy> getEnnemiesDead(){
         return ennemiesDead;
     }
     
