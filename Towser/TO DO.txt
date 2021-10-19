@@ -18,8 +18,9 @@ STYLE :
 
 OPTIMISATION / REGLAGE BUG /!\ /!\ 
 
+- Tile -> render(). puis changer create block par render
 - game->startWave->add l'ennemie comme ça puis toutes les x ms, trier la liste d'ennemie en fonction de leur indiceTuile
-- Revoir systeme de vague
+- Revoir systeme de vague (systeme de poid)
 
 DEBUG : 
 

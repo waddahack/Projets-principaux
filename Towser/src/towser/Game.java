@@ -28,7 +28,8 @@ public class Game {
     private static ArrayList<Enemy> enemies, ennemiesDead;
     private static ArrayList<Tile> path;
     private static boolean gameOver;
-    private boolean towerSelected = false, inWave = false, renderOverlay = false, dontPlace = false;
+    private boolean inWave, renderOverlay, dontPlace;
+    private Tower towerSelected;
     private ArrayList<Wave> waves;
     private ArrayList<Overlay> overlays;
     
@@ -45,6 +46,10 @@ public class Game {
         waveNumber = 5;
         waveReward = 200;
         gameOver = false;
+        inWave = false;
+        renderOverlay = false;
+        dontPlace = false;
+        towerSelected = null;
         initOverlays();
     }
     
@@ -211,25 +216,20 @@ public class Game {
                 dontPlace = true;
             if(dontPlace && !Mouse.isButtonDown(0))
                 dontPlace = false;
-            if(!t.isPlaced() && Mouse.isButtonDown(0) && t.canBePlaced() && !overlays.get(0).isClicked(0) && !dontPlace){
-                towerSelected = false;
+            if(!t.isPlaced() && Mouse.isButtonDown(0) && t.canBePlaced() && !overlays.get(0).isClicked(0) && !dontPlace)
                 t.place(map);
-            }
             else if(!t.isPlaced() && Mouse.isButtonDown(1)){
-                towerSelected = false;
+                selectTower(null);
                 t.destroy();
             }
-            if(t.isClicked(0))
-                t.setSelected(true);
+            if(t.isClicked(0) && t != towerSelected)
+                selectTower(t);
         }
         // Click check
         while(Mouse.next() || Keyboard.next()){
             // Reinitializing if clicking nowhere
-            if((Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !overlays.get(1).getButtons().get(0).isClicked(0)){
-                for(Tower t : towers){
-                    if(t.isPlaced() && t.isSelected() && !t.getOverlay().isClicked(0) && !overlays.get(0).getButtons().get(0).isClicked(0))
-                        t.setSelected(false);
-                }
+            if(towerSelected != null && !towerSelected.isClicked(0) && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !overlays.get(1).getButtons().get(0).isClicked(0)){
+                selectTower(null);
             }
             // Overlays inputs
             checkOverlaysInput();
@@ -301,7 +301,7 @@ public class Game {
         }
         // Overlay 2
         o = overlays.get(1);
-        if(o.getButtons().get(0).isClicked(0) && !inWave && !towerSelected && Mouse.getEventButtonState())
+        if(o.getButtons().get(0).isClicked(0) && !inWave && Mouse.getEventButtonState())
             startWave();
     }
     
@@ -441,11 +441,12 @@ public class Game {
     }
     
     public void createTower(int id){
-        if(towerSelected){
-                for(Tower t : towers)
-                    if(!t.isPlaced())
-                        t.destroy();
-            }
+        if(towerSelected != null){
+            if(!towerSelected.isPlaced())
+                towerSelected.destroy();
+            towerSelected.setSelected(false);
+            towerSelected = null;
+        }
         Tower tower = null;
         if(id >= 78)
             id -= 77;
@@ -460,7 +461,7 @@ public class Game {
         }
         if(tower != null && tower.getPrice() <= money){
             towers.add(tower);
-            towerSelected = true;
+            towerSelected = tower;
         }
     }
     
@@ -476,6 +477,14 @@ public class Game {
         for(i = 0 ; i < enemies.size() ; i++)
             enemies.get(i).die();
         Towser.game = new Game(1);
+    }
+    
+    public void selectTower(Tower t){
+        if(towerSelected != null)
+            towerSelected.setSelected(false);
+        towerSelected = t;
+        if(t != null)
+            t.setSelected(true);
     }
     
     public static void addEnemie(Enemy e){
