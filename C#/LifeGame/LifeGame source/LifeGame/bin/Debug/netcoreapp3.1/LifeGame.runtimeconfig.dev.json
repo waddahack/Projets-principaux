@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\MarinRuelen\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\MarinRuelen\\.nuget\\packages"
+    ]
+  }
+}

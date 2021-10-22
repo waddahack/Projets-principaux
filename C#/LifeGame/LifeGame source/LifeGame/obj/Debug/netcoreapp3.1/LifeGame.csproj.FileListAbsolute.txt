@@ -1,0 +1,32 @@
+D:\LifeGame\LifeGame\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.exe
+D:\LifeGame\LifeGame\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.deps.json
+D:\LifeGame\LifeGame\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.runtimeconfig.json
+D:\LifeGame\LifeGame\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.runtimeconfig.dev.json
+D:\LifeGame\LifeGame\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.dll
+D:\LifeGame\LifeGame\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.pdb
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csproj.AssemblyReference.cache
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.Form1.resources
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csproj.GenerateResource.cache
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.GeneratedMSBuildEditorConfig.editorconfig
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.AssemblyInfoInputs.cache
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.AssemblyInfo.cs
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csproj.CoreCompileInputs.cache
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.dll
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.pdb
+D:\LifeGame\LifeGame\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.genruntimeconfig.cache
+D:\LifeGame\LifeGame - Copie\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.exe
+D:\LifeGame\LifeGame - Copie\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.deps.json
+D:\LifeGame\LifeGame - Copie\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.runtimeconfig.json
+D:\LifeGame\LifeGame - Copie\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.runtimeconfig.dev.json
+D:\LifeGame\LifeGame - Copie\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.dll
+D:\LifeGame\LifeGame - Copie\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.pdb
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csproj.AssemblyReference.cache
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.Form1.resources
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csproj.GenerateResource.cache
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.GeneratedMSBuildEditorConfig.editorconfig
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.AssemblyInfoInputs.cache
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.AssemblyInfo.cs
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csproj.CoreCompileInputs.cache
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.dll
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.pdb
+D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.genruntimeconfig.cache
