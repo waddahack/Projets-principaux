@@ -13,7 +13,7 @@ public class Bullet{
     private int radius, speed;
     private Shootable aim, shooter;
     private boolean follow;
-    private double x, y, xDest, yDest, rdyToMove = 0;
+    private double x, y, xDest, yDest;
     private ArrayList<Float> rgb = new ArrayList<Float>();
     
     public Bullet(Shootable shooter, Shootable aim, int radius, ArrayList<Float> rgb){
@@ -45,7 +45,6 @@ public class Bullet{
     public void move(){
         double xDiffConst = xDest-shooter.getX(), yDiffConst = yDest-shooter.getY(), xDiff = xDiffConst, yDiff = yDiffConst;
         double hyp = Math.sqrt(xDiffConst*xDiffConst + yDiffConst*yDiffConst), prop = speed/hyp, angle = Math.atan2(yDiff, xDiff);
-        rdyToMove = System.currentTimeMillis();
         if(!(hasTouched(angle)) && isInRange()){
             if(follow){
                 xDiff = aim.getX()-x;
@@ -70,18 +69,12 @@ public class Bullet{
     }
     
     public void update(){
-        if(System.currentTimeMillis()-rdyToMove >= 10){
-            move();
-            render();
-        }
+        move();
+        render();
     }
     
     private void render(){
         Towser.drawFilledCircle(x, y, radius, rgb, 1f);
-    }
-    
-    public double getRdyToMove(){
-        return rdyToMove;
     }
     
     public double getX(){
@@ -132,7 +125,7 @@ public class Bullet{
     }
     
     private boolean aimTouched(Shootable aim, double cosinus, double sinus){
-        int xHitBoxPoint = (int) ((aim.getWidth()+speed)*cosinus), yHitBoxPoint = (int) ((aim.getWidth()+speed)*sinus);
+        int xHitBoxPoint = (int) ((aim.getWidth())*cosinus), yHitBoxPoint = (int) ((aim.getWidth())*sinus);
         if(x-radius <= aim.getX()+xHitBoxPoint && x-radius >= aim.getX()-xHitBoxPoint && y <= aim.getY()+yHitBoxPoint && y >= aim.getY()-yHitBoxPoint)
             return true;
         if(x+radius <= aim.getX()+xHitBoxPoint && x+radius >= aim.getX()-xHitBoxPoint && y <= aim.getY()+yHitBoxPoint && y >= aim.getY()-yHitBoxPoint)

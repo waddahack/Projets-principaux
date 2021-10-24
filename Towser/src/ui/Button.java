@@ -28,6 +28,7 @@ public class Button {
     private String text;
     private Texture bg = null, bgHover = null, currentText = null;
     private boolean hidden = false;
+    private boolean mouseButtonDown = false;
     
     public Button(int x, int y, int width, int height, String text, String bgName){
         build(x ,y, width, height, text, bgName, 0);
@@ -75,7 +76,12 @@ public class Button {
         return hidden;
     }
     
-    public void render(){
+    public void update(){
+        mouseButtonDown = Mouse.isButtonDown(0);
+        render();
+    }
+    
+    private void render(){
         if(!hidden){
             if(isMouseIn()){
                 if(bgHover != null && currentText != bgHover)
@@ -108,7 +114,7 @@ public class Button {
     }
     
     public boolean isClicked(int but){
-        return (!hidden && isMouseIn() && Mouse.isButtonDown(but));
+        return (!hidden && isMouseIn() && Mouse.isButtonDown(0) && !mouseButtonDown);
     }
     
     public void setBG(Texture t){

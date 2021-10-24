@@ -60,7 +60,7 @@ public class Overlay {
             glDisable(GL_TEXTURE_2D);
         
         for(Button b : buttons)
-            b.render();
+            b.update();
         
         int x, y, w, h;
         for(Texture t : textures){

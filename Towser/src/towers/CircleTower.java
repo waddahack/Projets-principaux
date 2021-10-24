@@ -23,7 +23,7 @@ public class CircleTower extends Tower{
         life = 100;
         width = Game.unite;
         name = "Tour circulaire";
-        bulletSpeed = 8;
+        bulletSpeed = 6;
         follow = false;
         isMultipleShot = true;
         rgb = Towser.colors.get("grey");

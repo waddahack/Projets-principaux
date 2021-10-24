@@ -49,7 +49,7 @@ public abstract class Tower extends Tile implements Shootable{
             searchAndShoot();
             updateBullets();
         }
-        render();
+        renderOther();
     }
     
     private void checkOverlayInput(){
@@ -163,7 +163,7 @@ public abstract class Tower extends Tile implements Shootable{
         }   
     }
     
-    public void render(){
+    public void renderOther(){
         if(!isPlaced)
             renderPrevisu();
         
@@ -258,8 +258,8 @@ public abstract class Tower extends Tile implements Shootable{
         x = Math.floorDiv((int)x, Game.unite);
         y = Math.floorDiv((int)y, Game.unite);
         map.get((int) y).set((int) x, this);
-        x = x*Game.unite+Game.unite/2;
-        y = y*Game.unite+Game.unite/2;
+        setX(x*Game.unite+Game.unite/2);
+        setY(y*Game.unite+Game.unite/2);
         isPlaced = true;
         initOverlay();
         Game.money -= price;

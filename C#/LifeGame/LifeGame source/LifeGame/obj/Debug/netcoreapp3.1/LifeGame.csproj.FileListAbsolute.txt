@@ -30,3 +30,18 @@ D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csproj.Co
 D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.dll
 D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.pdb
 D:\LifeGame\LifeGame - Copie\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.genruntimeconfig.cache
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.exe
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.deps.json
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.runtimeconfig.json
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.runtimeconfig.dev.json
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.dll
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Debug\netcoreapp3.1\LifeGame.pdb
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csprojAssemblyReference.cache
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.Form1.resources
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csproj.GenerateResource.cache
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.AssemblyInfoInputs.cache
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.AssemblyInfo.cs
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.csproj.CoreCompileInputs.cache
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.dll
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.pdb
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Debug\netcoreapp3.1\LifeGame.genruntimeconfig.cache

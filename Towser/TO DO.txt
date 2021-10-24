@@ -1,12 +1,12 @@
-PIXELART :
+PIXELART : (4)
 
-- Spawner et base /!\
-- Tile bush /!\
-- Tile grass+caillasse /!\
+- Spawner et base
+- Tile bush
+- Tile grass+caillasse
 - Logos Astre, Vie, Range, Power, Shoot rate, BulletSpeed
 - Fond selection tours, fond pour chaque tour (ou 1 pour tous ?) (renderDetail)
 
-FEATURES : 
+FEATURES : (2)
 
 - Coder la possibilité de focus l'ennemie le premier, le dernier, le plus fort
 - Coder la possibilité de vendre la tourelle à 75% de son prix total
@@ -14,18 +14,18 @@ FEATURES :
 STYLE :
 
 - Changer la police de... tout.
-/!\ - Changer les overlays
+(1) - Changer les overlays
 
-OPTIMISATION / REGLAGE BUG /!\ /!\ 
+OPTIMISATION / REGLAGE BUG (3)
 
-- Tile -> render(). puis changer create block par render
-- game->startWave->add l'ennemie comme ça puis toutes les x ms, trier la liste d'ennemie en fonction de leur indiceTuile
 - Revoir systeme de vague (systeme de poid)
+
+LEVEL DESIGN : (4)
+
+- Moins d'ennemies et plus fort
+- Barre d'hp sur ennemies
 
 DEBUG : 
 
 - Afficher les fps
 
-LEVEL DESIGN :
-
-- Moins d'ennemies et plus fort

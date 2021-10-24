@@ -6,6 +6,7 @@ import towers.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.Scanner;
 import org.lwjgl.input.Keyboard;
@@ -32,18 +33,21 @@ public class Game {
     private Tower towerSelected;
     private ArrayList<Wave> waves;
     private ArrayList<Overlay> overlays;
+    private double refreshTimer;
+    private static double refreshTime = 1000;
     
     public Game(int lvl){
         readFile("levels/level_"+lvl+".txt");
         searchPath();
         fixRoadSprites();
+        refreshTimer = System.currentTimeMillis();
         towers = new ArrayList<Tower>();
         towersDestroyed = new ArrayList<Tower>();
         enemies = new ArrayList<Enemy>();
         ennemiesDead = new ArrayList<Enemy>();
         life = 100;
         money = 20000;
-        waveNumber = 5;
+        waveNumber = 30;
         waveReward = 200;
         gameOver = false;
         inWave = false;
@@ -180,6 +184,10 @@ public class Game {
     }
     
     public void update(){
+        if(System.currentTimeMillis() - refreshTimer >= refreshTime){
+            sortEnemiesList();
+            refreshTimer = System.currentTimeMillis();
+        } 
         checkInput();
         render();
         // Wave check
@@ -208,6 +216,24 @@ public class Game {
             gameOver();
     }
     
+    private void sortEnemiesList(){
+        enemies.sort(new Comparator<Enemy>() {
+            @Override
+            public int compare(Enemy e1, Enemy e2) {
+                if(e1.getIndiceTuile() > e2.getIndiceTuile())
+                    return -1;
+                else if(e1.getIndiceTuile() < e2.getIndiceTuile())
+                    return 1;
+                else{
+                    if(e1.getMoveSpeed() > e2.getMoveSpeed())
+                        return -1;
+                    else
+                        return 1;
+                }
+            }
+        });
+    }
+    
     private void checkInput(){
         clearArrays();
         // Towers placement
@@ -222,13 +248,15 @@ public class Game {
                 selectTower(null);
                 t.destroy();
             }
-            if(t.isClicked(0) && t != towerSelected)
+            if(t.isClicked(0) && towerSelected == null)
+                selectTower(t);
+            else if(t.isClicked(0) && towerSelected != null && towerSelected.isPlaced() && !towerSelected.getOverlay().isClicked(0))
                 selectTower(t);
         }
         // Click check
         while(Mouse.next() || Keyboard.next()){
             // Reinitializing if clicking nowhere
-            if(towerSelected != null && !towerSelected.isClicked(0) && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !overlays.get(1).getButtons().get(0).isClicked(0)){
+            if(towerSelected != null && !towerSelected.isClicked(0) && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !towerSelected.getOverlay().isClicked(0) && !overlays.get(1).getButtons().get(0).isClicked(0)){
                 selectTower(null);
             }
             // Overlays inputs
@@ -239,7 +267,7 @@ public class Game {
     private void render(){
         for(int i = 0 ; i < mapH ; i++){
             for(int j = 0 ; j < mapW ; j++)
-                createBlock(j*unite, i*unite, map.get(i).get(j));
+                map.get(i).get(j).render();
         }
     }
     
@@ -305,24 +333,6 @@ public class Game {
             startWave();
     }
     
-    private void createBlock(int x, int y, Tile tile){
-        float r = 100, g = r, b = r;
-        ArrayList<Texture> listeText = tile.getTextures();
-        
-        if(listeText == null || listeText.isEmpty()){ // Si pas de texture
-            r = tile.getR();
-            g = tile.getG();
-            b = tile.getB();
-            draw(x, y, r, g, b);
-        }
-        else{
-            for(int i = 0 ; i < listeText.size()-1 ; i++)
-                draw(x, y, listeText.get(i));
-
-            draw(x, y, listeText.get(listeText.size()-1), tile.getAngle());
-        }
-    }
-    
     private void clearArrays(){
         int i;
         for(i = 0 ; i < ennemiesDead.size() ; i++)
@@ -332,54 +342,7 @@ public class Game {
             towers.remove(towersDestroyed.get(i));
         towersDestroyed.clear();
     }
-    
-    private void draw(int x, int y, float r, float g, float b){
-        draw(x, y, null, 0, r, g, b);
-    }
-    
-    private void draw(int x, int y, Texture t){
-        draw(x, y, t, 0, 0, 0, 0);
-    }
-    
-    private void draw(int x, int y, float r, float g, float b, double angle){
-        draw(x, y, null, angle, r, g, b);
-    }
-    
-    private void draw(int x, int y, Texture t, double angle){
-        draw(x, y, t, angle, 0, 0, 0);
-    }
-    
-    private void draw(int x, int y, Texture t, double angle, float r, float g, float b){
-        glPushMatrix(); //Save the current matrix.
-        glTranslatef((x + unite/2), (y + unite/2), 0);
-        if(angle != 0)
-            glRotated(angle, 0, 0, 1);
-        
-        if(t != null){
-            t.bind();
-            glEnable(GL_TEXTURE_2D);
-            glColor3f(1, 1, 1);
-        }
-        else
-            glColor3f(r, g, b);
-        
-        glBegin(GL_QUADS);
-            glTexCoord2f(0, 0);
-            glVertex2d(-unite/2, -unite/2);
-            glTexCoord2f(1, 0);
-            glVertex2d(unite/2, -unite/2);
-            glTexCoord2f(1, 1);
-            glVertex2d(unite/2, unite/2);
-            glTexCoord2f(0, 1);
-            glVertex2d(-unite/2, unite/2);
-        glEnd();
-        
-        if(t != null)
-            glDisable(GL_TEXTURE_2D);  
-        
-        glPopMatrix(); // Reset the current matrix to the one that was saved.
-    }
-    
+
     private void initOverlays(){
         overlays = new ArrayList<Overlay>();
         Overlay o;
@@ -402,7 +365,7 @@ public class Game {
     
     @SuppressWarnings("unchecked")
     private void startWave(){
-        int i, poidEnnemie = (int) Math.pow(waveNumber, 2), nbEnnemie = poidEnnemie/Math.floorDiv(5+waveNumber, 5);
+        int poidEnnemie = (int) Math.pow(waveNumber, 2), nbEnnemie = poidEnnemie/Math.floorDiv(5+waveNumber, 5);
         waves = new ArrayList<Wave>();
         if(waveNumber >= 10)
             nbEnnemie = poidEnnemie/3;
@@ -411,29 +374,20 @@ public class Game {
         waves.add(wave);
         if(waveNumber >= 5){
             wave = new Wave((int) Math.floor(nbEnnemie/1.5), 1);
-            for(Enemy e : wave.getEnnemies()){
-                i = 0;
-                while(i < enemies.size() && e.getMoveSpeed() <= enemies.get(i).getMoveSpeed()) i++;
-                enemies.add(i, e);
-            }
+            for(Enemy e : wave.getEnnemies())
+                enemies.add(e);
             waves.add(wave);
         }
         if(waveNumber >= 10){
             wave = new Wave(nbEnnemie/5, 2);
-            for(Enemy e : wave.getEnnemies()){
-                i = 0;
-                while(i < enemies.size() && e.getMoveSpeed() <= enemies.get(i).getMoveSpeed()) i++;
-                enemies.add(i, e);
-            }
+            for(Enemy e : wave.getEnnemies())
+                enemies.add(e);
             waves.add(wave);
         }
         if(waveNumber >= 14){
             wave = new Wave(nbEnnemie/6, 3);
-            for(Enemy e : wave.getEnnemies()){
-                i = 0;
-                while(i < enemies.size() && e.getMoveSpeed() <= enemies.get(i).getMoveSpeed()) i++;
-                enemies.add(i, e);
-            }
+            for(Enemy e : wave.getEnnemies())
+                enemies.add(e);
             waves.add(wave);
         }
 

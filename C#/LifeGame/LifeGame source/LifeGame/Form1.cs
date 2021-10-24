@@ -189,5 +189,10 @@ namespace LifeGame
         {
             MyTimer.Interval = (int)mspfInput.Value;
         }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

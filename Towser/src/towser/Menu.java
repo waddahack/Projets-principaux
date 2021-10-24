@@ -55,7 +55,7 @@ public class Menu {
         glEnd();
         glDisable(GL_TEXTURE_2D);
         for(Button b : buttons){
-            b.render();
+            b.update();
         }
     }
     

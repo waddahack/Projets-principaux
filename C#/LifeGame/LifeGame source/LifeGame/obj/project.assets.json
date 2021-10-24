@@ -8,19 +8,19 @@
     ".NETCoreApp,Version=v3.1": []
   },
   "packageFolders": {
-    "C:\\Users\\MarinRuelen\\.nuget\\packages\\": {}
+    "C:\\Users\\Marin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\LifeGame\\LifeGame\\LifeGame\\LifeGame.csproj",
+      "projectUniqueName": "F:\\Programmation\\Projets-principaux\\C#\\LifeGame\\LifeGame source\\LifeGame\\LifeGame.csproj",
       "projectName": "LifeGame",
-      "projectPath": "D:\\LifeGame\\LifeGame\\LifeGame\\LifeGame.csproj",
-      "packagesPath": "C:\\Users\\MarinRuelen\\.nuget\\packages\\",
-      "outputPath": "D:\\LifeGame\\LifeGame\\LifeGame\\obj\\",
+      "projectPath": "F:\\Programmation\\Projets-principaux\\C#\\LifeGame\\LifeGame source\\LifeGame\\LifeGame.csproj",
+      "packagesPath": "C:\\Users\\Marin\\.nuget\\packages\\",
+      "outputPath": "F:\\Programmation\\Projets-principaux\\C#\\LifeGame\\LifeGame source\\LifeGame\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\MarinRuelen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Marin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -63,7 +63,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -23,7 +23,7 @@ public class BasicTower extends Tower{
         life = 100;
         width = Game.unite;
         name = "Tour simple";
-        bulletSpeed = 6;
+        bulletSpeed = 4;
         follow = false;
         isMultipleShot = false;
         rgb = Towser.colors.get("blue");
@@ -41,7 +41,7 @@ public class BasicTower extends Tower{
         multipliers.add(1.2f);
         multipliers.add(10f);
         multipliers.add(1.4f);
-        multipliers.add(1.4f);
+        multipliers.add(2.1f);
         upgradesParam.put("prices", prices);
         upgradesParam.put("priceMultipliers", priceMultipliers);
         upgradesParam.put("multipliers", multipliers);

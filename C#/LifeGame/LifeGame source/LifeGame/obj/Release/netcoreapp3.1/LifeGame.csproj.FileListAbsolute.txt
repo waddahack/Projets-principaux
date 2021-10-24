@@ -1,0 +1,15 @@
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Release\netcoreapp3.1\LifeGame.csprojAssemblyReference.cache
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Release\netcoreapp3.1\LifeGame.Form1.resources
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Release\netcoreapp3.1\LifeGame.csproj.GenerateResource.cache
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Release\netcoreapp3.1\LifeGame.AssemblyInfoInputs.cache
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Release\netcoreapp3.1\LifeGame.AssemblyInfo.cs
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Release\netcoreapp3.1\LifeGame.csproj.CoreCompileInputs.cache
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Release\netcoreapp3.1\LifeGame.exe
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Release\netcoreapp3.1\LifeGame.deps.json
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Release\netcoreapp3.1\LifeGame.runtimeconfig.json
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Release\netcoreapp3.1\LifeGame.runtimeconfig.dev.json
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Release\netcoreapp3.1\LifeGame.dll
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\bin\Release\netcoreapp3.1\LifeGame.pdb
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Release\netcoreapp3.1\LifeGame.dll
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Release\netcoreapp3.1\LifeGame.pdb
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame source\LifeGame\obj\Release\netcoreapp3.1\LifeGame.genruntimeconfig.cache

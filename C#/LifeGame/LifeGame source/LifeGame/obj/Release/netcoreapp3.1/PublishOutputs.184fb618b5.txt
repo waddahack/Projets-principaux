@@ -1,0 +1,5 @@
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame.exe
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame.dll
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame.deps.json
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame.runtimeconfig.json
+F:\Programmation\Projets-principaux\C#\LifeGame\LifeGame.pdb
