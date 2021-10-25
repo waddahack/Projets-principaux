@@ -30,6 +30,7 @@ public class BasicTower extends Tower{
         ArrayList<Float> prices = new ArrayList<>();
         ArrayList<Float> priceMultipliers = new ArrayList<>();
         ArrayList<Float> multipliers = new ArrayList<>();
+        ArrayList<Float> maxUpgradeClicks = new ArrayList<>();
         prices.add(100f); // range
         prices.add(180f); // power
         prices.add(150f); // shoot rate
@@ -42,9 +43,14 @@ public class BasicTower extends Tower{
         multipliers.add(10f);
         multipliers.add(1.4f);
         multipliers.add(2.1f);
+        maxUpgradeClicks.add(3f);
+        maxUpgradeClicks.add(3f);
+        maxUpgradeClicks.add(5f);
+        maxUpgradeClicks.add(3f);
         upgradesParam.put("prices", prices);
         upgradesParam.put("priceMultipliers", priceMultipliers);
         upgradesParam.put("multipliers", multipliers);
+        upgradesParam.put("maxUpgradeClicks", maxUpgradeClicks);
     }
     
     @Override

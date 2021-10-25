@@ -20,7 +20,7 @@ OPTIMISATION / REGLAGE BUG (3)
 
 - Revoir systeme de vague (systeme de poid)
 
-LEVEL DESIGN : (4)
+LEVEL DESIGN : (5)
 
 - Moins d'ennemies et plus fort
 - Barre d'hp sur ennemies

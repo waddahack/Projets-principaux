@@ -281,7 +281,7 @@ public class Game {
         // Overlay 1
         o = overlays.get(0);
         t = "TOURS";
-        o.drawText(o.getW()/2-Towser.normalL.getWidth(t)/2, o.getMargin()-Towser.normalL.getHeight(t), t, Towser.normalL);
+        o.drawText(o.getW()/2-Towser.normalL.getWidth(t)/2, 0, t, Towser.normalL);
         
         t = BasicTower.priceP+"*";
         o.drawText(o.getMargin()-Towser.price.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.price);
@@ -307,24 +307,12 @@ public class Game {
         Button but;
         // Overlay 1
         o = overlays.get(0);
-        but = o.getButtons().get(0);
-        if(but.isClicked(0)){
-            if(but.getText() == ">>"){
-                o.updateCoords(+(o.getW()-unite), 0);
-                o.setButton(0, 0, 25, 50, 30, "brown", "<<");
-            }
-            else{
-                o.updateCoords(-(o.getW()-unite), 0);
-                o.setButton(0, 0, 25, 50, 30, "brown", ">>");
-            }
-            
-        }
         for(Button b : o.getButtons()) // Check tower clicked
             if((b.isClicked(0)))
-                createTower(o.getButtons().indexOf(b)+1);
+                createTower(o.getButtons().indexOf(b)+2);
 
-        for(int i = 1 ; i <= nbTower ; i++){ // Check tower pressed by keyboard
-            if(Keyboard.isKeyDown(i+1) || Keyboard.isKeyDown(78+i))
+        for(int i = 0 ; i < nbTower ; i++){ // Check tower pressed by keyboard
+            if(Keyboard.isKeyDown(i+2) || Keyboard.isKeyDown(79+i))
                 createTower(Keyboard.getEventKey());  
         }
         // Overlay 2
@@ -347,13 +335,12 @@ public class Game {
         overlays = new ArrayList<Overlay>();
         Overlay o;
         
-        o = new Overlay(Towser.windWidth-5*unite+unite/2, Towser.windHeight/6, 5*unite, 2*Towser.windHeight/3);
-        o.addButton(0, 25, 50, 30, "brown", ">>");
+        o = new Overlay(0, Towser.windHeight-2*Game.unite, Towser.windWidth, 2*Game.unite);
         o.setMargin(Game.unite);
-        o.addButton(o.getMargin(), o.getMargin()*2, Game.unite, Game.unite, "blue", null);
-        o.getButtons().get(1).setBG(Towser.getTexture("basicTower"));
-        o.addButton(o.getMargin()*3, o.getMargin()*2, Game.unite, Game.unite, "blue", null);
-        o.getButtons().get(2).setBG(Towser.getTexture("circleTower"));
+        o.addButton(o.getMargin(), o.getMargin(), Game.unite, Game.unite, "blue", null);
+        o.getButtons().get(0).setBG(Towser.getTexture("basicTower"));
+        o.addButton(o.getMargin()*3, o.getMargin(), Game.unite, Game.unite, "blue", null);
+        o.getButtons().get(1).setBG(Towser.getTexture("circleTower"));
         overlays.add(o);
         
         o = new Overlay(0, 0, Towser.windWidth, unite);
@@ -402,14 +389,14 @@ public class Game {
             towerSelected = null;
         }
         Tower tower = null;
-        if(id >= 78)
+        if(id >= 79)
             id -= 77;
-        id--;
+        id -= 2;
         switch(id){
-            case 1 :
+            case 0 :
                 tower = new BasicTower();
                 break;
-            case 2 :
+            case 1 :
                 tower = new CircleTower();
                 break;
         }

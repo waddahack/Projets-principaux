@@ -304,6 +304,15 @@ public abstract class Tower extends Tile implements Shootable{
     }
     
     public void initOverlay(){
+        int upX = overlay.getW()-overlay.getMargin()-50, upY = overlay.getH()/3, upW = 100, upH = 25;
+        overlay = new Overlay(Game.unite/2, Towser.windHeight-Game.unite/2-5*Game.unite, 6*Game.unite, 5*Game.unite);
+        for(int i = 0 ; i < upgradesParam.size() ; i++){
+            overlay.addButton(upX, upY, upW, upH, "blue", "Upgrade", (int)Math.floor(upgradesParam.get("maxUpgradeClicks").get((i))));
+        }
+        overlay.addButton(upX, upY, upW, upH, "blue", "Upgrade", 3);
+        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()+overlay.getMargin(), upW, upH, "blue", "Upgrade", 3);
+        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*2+overlay.getMargin()*2, upW, upH, "blue", "Upgrade", 5);
+        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*3+overlay.getMargin()*3, upW, upH, "blue", "Upgrade", 3);
     }
     
     public boolean isSelected(){
