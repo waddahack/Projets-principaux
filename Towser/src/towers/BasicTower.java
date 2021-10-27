@@ -58,17 +58,4 @@ public class BasicTower extends Tower{
         priceP *= 1.2;
         price = priceP;
     }
-    
-    @Override
-    public void initOverlay(){
-        if(x-Game.unite/2 > Game.unite/2+6*Game.unite || y+Game.unite/2 < Towser.windHeight-Game.unite/2-5*Game.unite)
-            overlay = new Overlay(Game.unite/2, Towser.windHeight-Game.unite/2-5*Game.unite, 6*Game.unite, 5*Game.unite);
-        else
-            overlay = new Overlay(Game.unite/2, 3*Game.unite/2, 6*Game.unite, 5*Game.unite);
-        int upX = overlay.getW()-overlay.getMargin()-50, upY = overlay.getH()/3, upW = 100, upH = 25;
-        overlay.addButton(upX, upY, upW, upH, "blue", "Upgrade", 3);
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()+overlay.getMargin(), upW, upH, "blue", "Upgrade", 3);
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*2+overlay.getMargin()*2, upW, upH, "blue", "Upgrade", 5);
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*3+overlay.getMargin()*3, upW, upH, "blue", "Upgrade", 3);
-    }
 }

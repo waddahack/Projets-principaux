@@ -209,8 +209,13 @@ public abstract class Tower extends Tile implements Shootable{
             renderOverlay();
     }
     
+    public void initOverlay(){
+        overlay = new Overlay(0, Towser.windHeight-Game.unite*2, Towser.windWidth, 2*Game.unite);
+        for(int i = 0 ; i < upgradesParam.size() ; i++)
+            overlay.addButton(20+100*i + 100*i, 50, 100, 25, "blue", "Upgrade", (int)Math.floor(upgradesParam.get("maxUpgradeClicks").get((i))));
+    }
+    
     public void renderOverlay(){
-        int tX = overlay.getMargin(), tY = overlay.getH()/3;
         String t = "";
         float upPrice;
         Button b;
@@ -235,11 +240,14 @@ public abstract class Tower extends Tile implements Shootable{
                     break;
             }
             upPrice = upgradesParam.get("prices").get(i);
-            overlay.drawText(tX, tY-Towser.normal.getHeight(t)/2+overlay.getButtons().get(0).getH()*i+overlay.getMargin()*i, t, Towser.normal);
+            overlay.drawText(20+i*100, 50, t, Towser.normal);
             b = overlay.getButtons().get(i);
             if(upPrice != 0 && !b.isHidden()){
                 t = (int)Math.floor(upPrice)+"*";
-                overlay.drawText(b.getX()-overlay.getX()-Towser.price.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.price.getHeight(t), t, Towser.price);
+                if(Game.money >= (int)Math.floor(upPrice))
+                    overlay.drawText(b.getX()-overlay.getX()-Towser.canBuy.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.canBuy.getHeight(t), t, Towser.canBuy);
+                else
+                    overlay.drawText(b.getX()-overlay.getX()-Towser.cantBuy.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.cantBuy.getHeight(t), t, Towser.cantBuy);
             }
         }
     }
@@ -255,15 +263,15 @@ public abstract class Tower extends Tile implements Shootable{
     }
     
     public void place(ArrayList<ArrayList<Tile>> map){
+        initOverlay();
         x = Math.floorDiv((int)x, Game.unite);
         y = Math.floorDiv((int)y, Game.unite);
         map.get((int) y).set((int) x, this);
         setX(x*Game.unite+Game.unite/2);
         setY(y*Game.unite+Game.unite/2);
-        isPlaced = true;
-        initOverlay();
         Game.money -= price;
         raisePrice();
+        isPlaced = true;
     }
     
     public boolean canBePlaced(){
@@ -301,18 +309,6 @@ public abstract class Tower extends Tile implements Shootable{
     
     public void setSelected(boolean b){
         selected = b;
-    }
-    
-    public void initOverlay(){
-        int upX = overlay.getW()-overlay.getMargin()-50, upY = overlay.getH()/3, upW = 100, upH = 25;
-        overlay = new Overlay(Game.unite/2, Towser.windHeight-Game.unite/2-5*Game.unite, 6*Game.unite, 5*Game.unite);
-        for(int i = 0 ; i < upgradesParam.size() ; i++){
-            overlay.addButton(upX, upY, upW, upH, "blue", "Upgrade", (int)Math.floor(upgradesParam.get("maxUpgradeClicks").get((i))));
-        }
-        overlay.addButton(upX, upY, upW, upH, "blue", "Upgrade", 3);
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()+overlay.getMargin(), upW, upH, "blue", "Upgrade", 3);
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*2+overlay.getMargin()*2, upW, upH, "blue", "Upgrade", 5);
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*3+overlay.getMargin()*3, upW, upH, "blue", "Upgrade", 3);
     }
     
     public boolean isSelected(){

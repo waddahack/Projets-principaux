@@ -271,26 +271,27 @@ public class Game {
         }
     }
     
-    public void renderOverlays(){
-        for(Overlay o : overlays)
-            o.render(); 
-        overlays.get(0).render();
+    public void renderOverlays(){ 
         String t;
         Overlay o;
         
         // Overlay 1
-        o = overlays.get(0);
-        t = "TOURS";
-        o.drawText(o.getW()/2-Towser.normalL.getWidth(t)/2, 0, t, Towser.normalL);
-        
-        t = BasicTower.priceP+"*";
-        o.drawText(o.getMargin()-Towser.price.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.price);
-        
-        t = CircleTower.priceP+"*";
-        o.drawText(o.getMargin()*3-Towser.price.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.price);
+        if(towerSelected == null || !towerSelected.isPlaced()){
+            o = overlays.get(0);
+            o.render();
+            t = "TOURS";
+            o.drawText(o.getW()/2-Towser.normalL.getWidth(t)/2, 0, t, Towser.normalL);
+
+            t = BasicTower.priceP+"*";
+            o.drawText(o.getMargin()-Towser.canBuy.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.canBuy);
+
+            t = CircleTower.priceP+"*";
+            o.drawText(o.getMargin()*3-Towser.canBuy.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.canBuy);
+        }
         //
         // Overlay 2
         o = overlays.get(1);
+        o.render();
         t = money+"*";
         o.drawText(o.getW()/5-Towser.astres.getWidth(t)/2, o.getH()/2-Towser.astres.getHeight(t)/2, t, Towser.astres);
         

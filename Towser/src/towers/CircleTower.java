@@ -30,6 +30,7 @@ public class CircleTower extends Tower{
         ArrayList<Float> prices = new ArrayList<Float>();
         ArrayList<Float> priceMultipliers = new ArrayList<Float>();
         ArrayList<Float> multipliers = new ArrayList<Float>();
+        ArrayList<Float> maxUpgradeClicks = new ArrayList<Float>();
         prices.add(150f); // range
         prices.add(150f); // power
         prices.add(170f); // shoot rate
@@ -42,29 +43,20 @@ public class CircleTower extends Tower{
         multipliers.add(1.5f);
         multipliers.add(1.5f);
         multipliers.add(0f);
+        maxUpgradeClicks.add(2f);
+        maxUpgradeClicks.add(3f);
+        maxUpgradeClicks.add(4f);
+        maxUpgradeClicks.add(0f);
         upgradesParam.put("prices", prices);
         upgradesParam.put("priceMultipliers", priceMultipliers);
         upgradesParam.put("multipliers", multipliers);
+        upgradesParam.put("maxUpgradeClicks", maxUpgradeClicks);
     }
     
     @Override
     protected void raisePrice(){
         priceP *= 1.1;
         price = priceP;
-    }
-    
-    @Override
-    public void initOverlay(){
-        if(x-Game.unite/2 > Game.unite/2+6*Game.unite || y+Game.unite/2 < Towser.windHeight-Game.unite/2-5*Game.unite)
-            overlay = new Overlay(Game.unite/2, Towser.windHeight-Game.unite/2-5*Game.unite, 6*Game.unite, 5*Game.unite);
-        else
-            overlay = new Overlay(Game.unite/2, 3*Game.unite/2, 6*Game.unite, 5*Game.unite);
-        int upX = overlay.getW()-overlay.getMargin()-50, upY = overlay.getH()/3, upW = 100, upH = 25;
-        overlay.addButton(upX, upY, upW, upH, "blue", "Upgrade", 2);
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()+overlay.getMargin(), upW, upH, "blue", "Upgrade", 3);
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*2+overlay.getMargin()*2, upW, upH, "blue", "Upgrade", 4);
-        overlay.addButton(upX, upY+overlay.getButtons().get(0).getH()*3+overlay.getMargin()*3, upW, upH, "blue", "Upgrade");
-        overlay.getButtons().get(3).setHidden(true);
     }
     
     @Override

@@ -38,7 +38,7 @@ public class Towser{
     public static Menu menu;
     public static Game game;
     private static Map<String, Texture> textures;
-    public static UnicodeFont normal, astres, life, normalL, price;
+    public static UnicodeFont normal, astres, life, normalL, canBuy, cantBuy;
     public static DecimalFormat formatter = new DecimalFormat("#.##");
     public static Map<String, ArrayList<Float>> colors;
     
@@ -222,15 +222,21 @@ public class Towser{
         normalL.addAsciiGlyphs();
         
         awtFont = new java.awt.Font("Imprint MT Shadow", java.awt.Font.BOLD, 12);
-        price = new UnicodeFont(awtFont);
-        price.getEffects().add(new ColorEffect(Color.yellow));
-        price.addAsciiGlyphs();
+        canBuy = new UnicodeFont(awtFont);
+        canBuy.getEffects().add(new ColorEffect(Color.yellow));
+        canBuy.addAsciiGlyphs();
+        
+        awtFont = new java.awt.Font("Imprint MT Shadow", java.awt.Font.BOLD, 12);
+        cantBuy = new UnicodeFont(awtFont);
+        cantBuy.getEffects().add(new ColorEffect(Color.yellow));
+        cantBuy.addAsciiGlyphs();
         try {
             normal.loadGlyphs();
             astres.loadGlyphs();
             life.loadGlyphs();
             normalL.loadGlyphs();
-            price.loadGlyphs();
+            canBuy.loadGlyphs();
+            cantBuy.loadGlyphs();
         } catch (SlickException ex) {
             Logger.getLogger(Towser.class.getName()).log(Level.SEVERE, null, ex);
         }
