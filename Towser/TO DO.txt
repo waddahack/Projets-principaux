@@ -18,6 +18,8 @@ STYLE :
 
 OPTIMISATION / REGLAGE BUG (3)
 
+(1111) - regler bug : selectionner une tourelle rend les balles transparentes
+des tourelles à index inférieurs dans la liste. Le probleme viens de tower -> renderOverlay
 - Revoir systeme de vague (systeme de poid)
 
 LEVEL DESIGN : (5)

@@ -13,6 +13,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.opengl.Texture;
 import static towser.Towser.windHeight;
 import static towser.Towser.windWidth;
@@ -33,14 +34,11 @@ public class Game {
     private Tower towerSelected;
     private ArrayList<Wave> waves;
     private ArrayList<Overlay> overlays;
-    private double refreshTimer;
-    private static double refreshTime = 1000;
     
     public Game(int lvl){
         readFile("levels/level_"+lvl+".txt");
         searchPath();
         fixRoadSprites();
-        refreshTimer = System.currentTimeMillis();
         towers = new ArrayList<Tower>();
         towersDestroyed = new ArrayList<Tower>();
         enemies = new ArrayList<Enemy>();
@@ -184,10 +182,6 @@ public class Game {
     }
     
     public void update(){
-        if(System.currentTimeMillis() - refreshTimer >= refreshTime){
-            sortEnemiesList();
-            refreshTimer = System.currentTimeMillis();
-        } 
         checkInput();
         render();
         // Wave check
@@ -214,24 +208,6 @@ public class Game {
         
         if(gameOver)
             gameOver();
-    }
-    
-    private void sortEnemiesList(){
-        enemies.sort(new Comparator<Enemy>() {
-            @Override
-            public int compare(Enemy e1, Enemy e2) {
-                if(e1.getIndiceTuile() > e2.getIndiceTuile())
-                    return -1;
-                else if(e1.getIndiceTuile() < e2.getIndiceTuile())
-                    return 1;
-                else{
-                    if(e1.getMoveSpeed() > e2.getMoveSpeed())
-                        return -1;
-                    else
-                        return 1;
-                }
-            }
-        });
     }
     
     private void checkInput(){
@@ -275,21 +251,27 @@ public class Game {
         String t;
         Overlay o;
         
-        // Overlay 1
+        // Overlay selection tours
         if(towerSelected == null || !towerSelected.isPlaced()){
             o = overlays.get(0);
             o.render();
             t = "TOURS";
             o.drawText(o.getW()/2-Towser.normalL.getWidth(t)/2, 0, t, Towser.normalL);
 
+            UnicodeFont font = Towser.canBuy;
+            if(Game.money < BasicTower.priceP)
+                font = Towser.cantBuy;
             t = BasicTower.priceP+"*";
-            o.drawText(o.getMargin()-Towser.canBuy.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.canBuy);
-
+            o.drawText(o.getMargin()-font.getWidth(t)/2, 10, t, font);
+            
+            font = Towser.canBuy;
+            if(Game.money < CircleTower.priceP)
+                font = Towser.cantBuy;
             t = CircleTower.priceP+"*";
-            o.drawText(o.getMargin()*3-Towser.canBuy.getWidth(t)/2, o.getMargin()*2+Game.unite/2, t, Towser.canBuy);
+            o.drawText(o.getMargin()*3-font.getWidth(t)/2, 10, t, font);
         }
         //
-        // Overlay 2
+        // Overlay principal
         o = overlays.get(1);
         o.render();
         t = money+"*";
@@ -306,17 +288,17 @@ public class Game {
     public void checkOverlaysInput(){
         Overlay o;
         Button but;
-        // Overlay 1
+        // Overlay selections tours
         o = overlays.get(0);
         for(Button b : o.getButtons()) // Check tower clicked
-            if((b.isClicked(0)))
+            if(b.isClicked(0) && towerSelected == null)
                 createTower(o.getButtons().indexOf(b)+2);
 
         for(int i = 0 ; i < nbTower ; i++){ // Check tower pressed by keyboard
             if(Keyboard.isKeyDown(i+2) || Keyboard.isKeyDown(79+i))
                 createTower(Keyboard.getEventKey());  
         }
-        // Overlay 2
+        // Overlay principal
         o = overlays.get(1);
         if(o.getButtons().get(0).isClicked(0) && !inWave && Mouse.getEventButtonState())
             startWave();

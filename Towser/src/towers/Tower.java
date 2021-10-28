@@ -15,6 +15,7 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2d;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.opengl.Texture;
 import towser.Game;
 import towser.Towser;
@@ -108,26 +109,15 @@ public abstract class Tower extends Tile implements Shootable{
     }
     
     public void searchAndShoot(){
-        int i;
         ArrayList<Enemy> enemies = Game.getEnnemies();
-        ArrayList<Enemy> enemiesInRange = new ArrayList<Enemy>();
-        Enemy first;
+        Enemy first = null;
         if(enemies != null && !enemies.isEmpty()){
-            i = 0;
-            while(i < enemies.size()){
-                if(enemies.get(i).isSpawned() && enemies.get(i).isInRangeOf(this))
-                    enemiesInRange.add(enemies.get(i));
-                i++;
-            }
-            if(!enemiesInRange.isEmpty()){
-                first = enemiesInRange.get(0);
-                for(i = 0 ; i < enemiesInRange.size() ; i++)
-                    if(enemiesInRange.get(i).getIndiceTuile() > first.getIndiceTuile())
-                        first = enemiesInRange.get(i);
-                aim(first);
-            }
-            else
-                aim(null);
+            for(int i = 0 ; i < enemies.size() ; i++)
+                if(enemies.get(i).isSpawned() && enemies.get(i).isInRangeOf(this)){
+                    if(first == null || enemies.get(i).getIndiceTuile() > first.getIndiceTuile() || (enemies.get(i).getIndiceTuile() == first.getIndiceTuile() && enemies.get(i).getMoveSpeed() > first.getMoveSpeed()))
+                        first = enemies.get(i);
+                }
+            aim(first);
         }
         else
             aim(null);
@@ -211,8 +201,11 @@ public abstract class Tower extends Tile implements Shootable{
     
     public void initOverlay(){
         overlay = new Overlay(0, Towser.windHeight-Game.unite*2, Towser.windWidth, 2*Game.unite);
-        for(int i = 0 ; i < upgradesParam.size() ; i++)
-            overlay.addButton(20+100*i + 100*i, 50, 100, 25, "blue", "Upgrade", (int)Math.floor(upgradesParam.get("maxUpgradeClicks").get((i))));
+        for(int i = 0 ; i < upgradesParam.size() ; i++){
+            overlay.addButton(120+i*200, 70, 100, 25, "blue", "Upgrade", (int)Math.floor(upgradesParam.get("maxUpgradeClicks").get((i))));
+            if(upgradesParam.get("maxUpgradeClicks").get(i) <= 0)
+                overlay.getButtons().get(i).setHidden(true);
+        }
     }
     
     public void renderOverlay(){
@@ -222,7 +215,7 @@ public abstract class Tower extends Tile implements Shootable{
         
         overlay.render();
         
-        overlay.drawText(overlay.getW()/2-Towser.normalL.getWidth(name)/2, overlay.getMargin()-Towser.normalL.getHeight(name)/2, name, Towser.normalL);
+        overlay.drawText(overlay.getW()/2-Towser.normalL.getWidth(name)/2, 0, name, Towser.normalL);
         
         for(int i = 0 ; i < nbUpgrades ; i++){
             switch(i){
@@ -240,14 +233,14 @@ public abstract class Tower extends Tile implements Shootable{
                     break;
             }
             upPrice = upgradesParam.get("prices").get(i);
-            overlay.drawText(20+i*100, 50, t, Towser.normal);
+            overlay.drawText(20+i*200, 30, t, Towser.normal);
             b = overlay.getButtons().get(i);
             if(upPrice != 0 && !b.isHidden()){
                 t = (int)Math.floor(upPrice)+"*";
-                if(Game.money >= (int)Math.floor(upPrice))
-                    overlay.drawText(b.getX()-overlay.getX()-Towser.canBuy.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.canBuy.getHeight(t), t, Towser.canBuy);
-                else
-                    overlay.drawText(b.getX()-overlay.getX()-Towser.cantBuy.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-Towser.cantBuy.getHeight(t), t, Towser.cantBuy);
+                UnicodeFont font = Towser.canBuy;
+                if(Game.money < (int)Math.floor(upPrice))
+                    font = Towser.cantBuy;
+                overlay.drawText(b.getX()-overlay.getX()-font.getWidth(t)/2, b.getY()-overlay.getY()-b.getH()/2-font.getHeight(t), t, font);
             }
         }
     }
@@ -275,11 +268,12 @@ public abstract class Tower extends Tile implements Shootable{
     }
     
     public boolean canBePlaced(){
-        boolean bool = false;
+        if(!isInWindow())
+            return false;
         String tileType = Game.getMap().get(Math.floorDiv((int)y, Game.unite)).get(Math.floorDiv((int) x, Game.unite)).getType(); // middle point
-        if(isInWindow() && tileType == "grass")
-            bool = true;
-        return bool;
+        if(tileType == "grass")
+            return true;
+        return false;
     }
     
     public boolean isPlaced(){

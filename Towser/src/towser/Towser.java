@@ -148,11 +148,10 @@ public class Towser{
     }
     
     public static void drawFilledCircle(double x, double y, float radius, ArrayList<Float> rgb, float a){
-        float DEG2RAD = (float) (3.15149/180), degInRad, degInRad2;
-        int i;
+        float DEG2RAD = (float) (3.14159/180), degInRad, degInRad2;
         glBegin(GL_TRIANGLES);
         glColor4f(rgb.get(0), rgb.get(1), rgb.get(2), a);
-        for(i = 0 ; i < 360; i++){
+        for(int i = 0 ; i < 360; i++){
             degInRad = i*DEG2RAD;
             degInRad2 = (i+1)*DEG2RAD;
             glVertex2d(x, y);
@@ -228,7 +227,7 @@ public class Towser{
         
         awtFont = new java.awt.Font("Imprint MT Shadow", java.awt.Font.BOLD, 12);
         cantBuy = new UnicodeFont(awtFont);
-        cantBuy.getEffects().add(new ColorEffect(Color.yellow));
+        cantBuy.getEffects().add(new ColorEffect(Color.red));
         cantBuy.addAsciiGlyphs();
         try {
             normal.loadGlyphs();

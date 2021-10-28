@@ -38,7 +38,7 @@ public class BasicTower extends Tower{
         priceMultipliers.add(1.5f);
         priceMultipliers.add(1.25f);
         priceMultipliers.add(1.7f);
-        priceMultipliers.add(1.6f);
+        priceMultipliers.add(1f);
         multipliers.add(1.2f);
         multipliers.add(10f);
         multipliers.add(1.4f);
