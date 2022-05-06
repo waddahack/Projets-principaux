@@ -1,42 +1,50 @@
 package ennemies;
 
-import java.util.ArrayList;
 import towser.Game;
+import managers.SoundManager;
+import towser.Towser;
+import static towser.Towser.game;
 
 public class TrickyEnemy extends Enemy{
     
+    public static int idCount = 0, balance = 30;
+    
     public TrickyEnemy(){
-        super();
-        speedRatio = 2.5;
-        reward = 10;
-        power = 8;
+        super(++idCount);
+        name = "Group of Bazooldier";
+        spawnSpeed = 1.8;
+        reward = 5;
+        power = 6;
         shootRate = 1;
-        moveSpeed = 3.3;
+        moveSpeed = 2.9;
         range = 30;
-        life = 35;
+        life = 80;
         weight = 3;
-        width = Game.unite-Game.unite/2;
-        rgb = new ArrayList<Float>();
-        rgb.add(0.2f);
-        rgb.add(0.2f);
-        rgb.add(0.8f);
+        width = 40;
+        eBalance = balance;
+        rgb = new float[]{0.2f, 0.2f, 0.8f};
+        sprite = Towser.textures.get("trickyEnemy");
+        brightSprite = Towser.textures.get("trickyEnemyBright");
+        volume = SoundManager.Volume.SEMI_LOW;
+        clip = SoundManager.Instance.getClip("group_walking");
+        stepEveryMilli = 800;
+        
+        initBack();
     }
     
     @Override
     public void die(){
-        life = 0;
-        Game.getEnnemiesDead().add(this);
         if(!isInBase()){
             for(int i = 0 ; i < 3 ; i++){
-                Enemy e = new FastEnemy();
+                Enemy e = new BasicEnemy();
                 e.setX(x);
                 e.setY(y);
                 e.setIndiceTuile(indiceTuile);
                 e.setDir(dir);
-                Game.addEnemie(e);
-                e.stopFor(i*200);
-                e.setStarted(true);
+                e.stopFor(i*350/game.gameSpeed);
+                game.addEnemie(e);
             }
         }
+        super.die();
     }
 }

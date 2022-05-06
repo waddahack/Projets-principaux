@@ -16,4 +16,5 @@ public interface Shootable {
     public int getBulletSpeed();
     public int getRange();
     public boolean isMultipleShot();
+    public ArrayList<Shootable> getEnemiesTouched();
 }

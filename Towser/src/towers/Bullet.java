@@ -2,21 +2,22 @@ package towers;
 
 import ennemies.Enemy;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.newdawn.slick.opengl.Texture;
 import towser.Game;
 import towser.Towser;
 import towser.Shootable;
+import static towser.Towser.game;
 
 public class Bullet{
     
-    private int radius, speed;
+    private double radius;
+    private int speed;
     private Shootable aim, shooter;
-    private boolean follow;
-    private double x, y, xDest, yDest;
-    private ArrayList<Float> rgb = new ArrayList<Float>();
+    private boolean follow, firstUpdate = true, haveWaited = false, goThrough = false;
+    private double x, y, xDest, yDest, waitFor, startTime;
+    private Texture sprite;
     
-    public Bullet(Shootable shooter, Shootable aim, int radius, ArrayList<Float> rgb){
+    public Bullet(Shootable shooter, Shootable aim, double radius, Texture sprite, boolean goThrought){
         this.x = shooter.getX();
         this.y = shooter.getY();
         this.radius = radius;
@@ -25,11 +26,12 @@ public class Bullet{
         this.aim = aim;
         xDest = aim.getX();
         yDest = aim.getY();
-        this.rgb = rgb;
+        this.sprite = sprite;
         this.shooter = shooter;
+        this.goThrough = goThrough;
     }
     
-    public Bullet(Shootable shooter, double xDest, double yDest, int radius, ArrayList<Float> rgb){
+    public Bullet(Shootable shooter, double xDest, double yDest, double radius, Texture sprite, boolean goThrought, int waitFor){
         this.x = shooter.getX();
         this.y = shooter.getY();
         this.radius = radius;
@@ -38,14 +40,21 @@ public class Bullet{
         this.aim = null;
         this.xDest = xDest;
         this.yDest = yDest;
-        this.rgb = rgb;
+        this.sprite = sprite;
         this.shooter = shooter;
+        this.waitFor = waitFor;
+        this.goThrough = goThrough;
     }
     
     public void move(){
+        int speed = this.speed*game.gameSpeed;
         double xDiffConst = xDest-shooter.getX(), yDiffConst = yDest-shooter.getY(), xDiff = xDiffConst, yDiff = yDiffConst;
         double hyp = Math.sqrt(xDiffConst*xDiffConst + yDiffConst*yDiffConst), prop = speed/hyp, angle = Math.atan2(yDiff, xDiff);
-        if(!(hasTouched(angle)) && isInRange()){
+        boolean touched = hasTouched(angle), inRange = isInRange();
+        boolean aimAlreadyTouched = false;
+        if(shooter.isMultipleShot() && aim != null && shooter.getEnemiesTouched().contains(aim))
+            aimAlreadyTouched = true;
+        if((!touched || aimAlreadyTouched) && inRange){
             if(follow){
                 xDiff = aim.getX()-x;
                 yDiff = aim.getY()-y;
@@ -60,21 +69,33 @@ public class Bullet{
                 y += yDiffConst*prop; 
             }
         }
-        if(!isInRange())
+        if(!inRange)
             shooter.getBulletsToRemove().add(this);
-        if(hasTouched(angle)){
+        if(!aimAlreadyTouched && touched){
+            shooter.getEnemiesTouched().add(aim);
             aim.attacked(shooter.getPower());
-            shooter.getBulletsToRemove().add(this);
+            if(!goThrough)
+                shooter.getBulletsToRemove().add(this);
         }
     }
     
     public void update(){
-        move();
-        render();
+        if(firstUpdate){
+            startTime = System.currentTimeMillis();
+            firstUpdate = false;
+        }
+        if(System.currentTimeMillis() - startTime >= waitFor){
+            haveWaited = true;
+        }
+        if(haveWaited){
+            move();
+            render();
+        }
+        
     }
     
     private void render(){
-        Towser.drawFilledCircle(x, y, radius, rgb, 1f);
+        Towser.drawFilledRectangle(x-radius, y-radius, (int)(2*radius), (int)(2*radius), null, 1, sprite);
     }
     
     public double getX(){
@@ -85,7 +106,7 @@ public class Bullet{
         return y;
     }
     
-    public int getRadius(){
+    public double getRadius(){
         return radius;
     }
     
@@ -102,12 +123,14 @@ public class Bullet{
     private boolean hasTouched(double angle){
         double cosinus = Math.abs(Math.cos(angle)), sinus = Math.abs(Math.sin(angle));
         if(!follow){
-            ArrayList<Enemy> ennemies = Game.getEnnemies();
+            ArrayList<Enemy> ennemies = game.enemies;
             Enemy e;
             int i;
             double xDiff, yDiff;
             for(i = 0 ; i < ennemies.size() ; i++){
                 e = ennemies.get(i);
+                if(shooter.isMultipleShot() && shooter.getEnemiesTouched().contains(e))
+                    continue;
                 xDiff = e.getX()-x;
                 yDiff = e.getY()-y;
                 angle = Math.atan2(yDiff, xDiff);
@@ -125,7 +148,7 @@ public class Bullet{
     }
     
     private boolean aimTouched(Shootable aim, double cosinus, double sinus){
-        int xHitBoxPoint = (int) ((aim.getWidth())*cosinus), yHitBoxPoint = (int) ((aim.getWidth())*sinus);
+        int xHitBoxPoint = (int) ((aim.getWidth()-20)*cosinus), yHitBoxPoint = (int) ((aim.getWidth()-20)*sinus);
         if(x-radius <= aim.getX()+xHitBoxPoint && x-radius >= aim.getX()-xHitBoxPoint && y <= aim.getY()+yHitBoxPoint && y >= aim.getY()-yHitBoxPoint)
             return true;
         if(x+radius <= aim.getX()+xHitBoxPoint && x+radius >= aim.getX()-xHitBoxPoint && y <= aim.getY()+yHitBoxPoint && y >= aim.getY()-yHitBoxPoint)

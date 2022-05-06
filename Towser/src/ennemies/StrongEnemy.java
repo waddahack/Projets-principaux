@@ -1,24 +1,31 @@
 package ennemies;
 
-import java.util.ArrayList;
-import towser.Game;
+import managers.SoundManager;
+import towser.Towser;
 
 public class StrongEnemy extends Enemy{
     
+    public static int idCount = 0, balance = 40;
+    
     public StrongEnemy(){
-        super();
-        speedRatio = 2;
-        reward = 6;
-        power = 3;
+        super(++idCount);
+        name = "Bazank";
+        spawnSpeed = 2.2;
+        reward = 10;
+        power = 10;
         shootRate = 1;
-        moveSpeed = 2;
+        moveSpeed = 2.4;
         range = 30;
-        life = 130;
+        life = 280;
         weight = 2.5;
-        width = Game.unite-Game.unite/4;
-        rgb = new ArrayList<Float>();
-        rgb.add(0.4f);
-        rgb.add(0.9f);
-        rgb.add(0.1f);
+        width = 50;
+        eBalance = balance;
+        rgb = new float[]{0.4f, 0.9f, 0.1f};
+        sprite = Towser.textures.get("strongEnemy");
+        brightSprite = Towser.textures.get("strongEnemyBright");
+        clip = SoundManager.Instance.getClip("tank");
+        stepEveryMilli = 0;
+        
+        initBack();
     }
 }

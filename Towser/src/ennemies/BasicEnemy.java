@@ -1,25 +1,33 @@
 package ennemies;
 
-import java.util.ArrayList;
-import towser.Game;
+import managers.SoundManager;
+import towser.Towser;
 
 
 public class BasicEnemy extends Enemy{
     
+    public static int idCount = 0, balance = 10;
+    
     public BasicEnemy(){
-        super();
-        speedRatio = 0.8;
+        super(++idCount);
+        name = "Bazooldier";
+        spawnSpeed = 0.8;
         reward = 2;
-        power = 1;
+        power = 2;
         shootRate = 1;
-        moveSpeed = 2.7;
+        moveSpeed = 3.3;
         range = 30;
-        life = 10;
+        life = 30;
         weight = 1;
-        width = Game.unite-Game.unite/3;
-        rgb = new ArrayList<Float>();
-        rgb.add(1f);
-        rgb.add(0.7f);
-        rgb.add(0f);
+        width = 40;
+        rgb = new float[]{1f, 0.7f, 0f};
+        sprite = Towser.textures.get("basicEnemy");
+        brightSprite = Towser.textures.get("basicEnemyBright");
+        volume = SoundManager.Volume.SEMI_LOW;
+        clip = SoundManager.Instance.getClip("walking");
+        stepEveryMilli = 700;
+        eBalance = balance;
+        
+        initBack();
     }
 }

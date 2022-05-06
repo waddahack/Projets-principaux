@@ -1,34 +1,47 @@
 package towser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import ui.Button;
 import java.util.ArrayList;
-import static org.lwjgl.opengl.GL11.*;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 import static towser.Towser.windHeight;
 import static towser.Towser.windWidth;
+import ui.Overlay;
 
 
 public class Menu {
     
-    private Button start, option, exit;
-    private ArrayList<Button> buttons = new ArrayList<Button>();
+    private Button start, create, option, exit;
+    private Overlay[] overlays = new Overlay[4];
     
     public Menu(){
-        start = new Button(windWidth/2, windHeight/3, 200, 50, "Jouer", "blue");
-        option = new Button(windWidth/2, windHeight/3+100, 200, 50, "Options", "blue");
-        exit = new Button(windWidth/2,windHeight/3+300, 200, 50, "Quitter", "blue");
-        buttons.add(start);
-        buttons.add(option);
-        buttons.add(exit);
+        start = new Button(windWidth/2, windHeight/6, 200, 50, Towser.colors.get("green_semidark"), Towser.colors.get("green_dark"));
+        create = new Button(windWidth/2, windHeight/6, 200, 50, Towser.colors.get("green_semidark"), Towser.colors.get("green_dark"));
+        option = new Button(windWidth/2, windHeight/6, 200, 50, Towser.colors.get("green_semidark"), Towser.colors.get("green_dark"));
+        exit = new Button(windWidth/2, windHeight/6, 200, 50, Towser.colors.get("green_semidark"), Towser.colors.get("green_dark"));
+        for(int i = 0 ; i < 4 ; i++){
+            overlays[i] = new Overlay(0, i*windHeight/4, windWidth, windHeight/4);
+            switch(i){
+                case 0:
+                    overlays[i].addButton(start);
+                    break;
+                case 1:
+                    overlays[i].addButton(create);
+                    break;
+                case 2:
+                    overlays[i].addButton(option);
+                    break;
+                case 3:
+                    overlays[i].addButton(exit);
+                    break;
+            }
+        }
     }
     
     public Button getStart(){
         return start;
+    }
+    
+    public Button getCreate(){
+        return create;
     }
     
     public Button getOption(){
@@ -40,37 +53,13 @@ public class Menu {
     }
     
     public void render(){
-        glEnable(GL_TEXTURE_2D);
-        glColor3f(1, 1, 1);
-        Towser.getTexture("woodBG").bind();
-        glBegin(GL_QUADS);
-            glTexCoord2f(0, 0);
-            glVertex2i(0, 0);
-            glTexCoord2f(1, 0);
-            glVertex2i(windWidth, 0);
-            glTexCoord2f(1, 1);
-            glVertex2i(windWidth, windHeight);
-            glTexCoord2f(0, 1);
-            glVertex2i(0, windHeight);
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
-        for(Button b : buttons){
-            b.update();
+        Towser.drawFilledRectangle(0, 0, windWidth, windHeight, null, 1, Towser.textures.get("grass"));
+        for(Overlay o : overlays){
+            o.render();
         }
-    }
-    
-    private Texture loadTexture(String key) {
-        try {
-            return TextureLoader.getTexture("PNG", new FileInputStream(new File("images/"+key+".png")));
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-    
-    public ArrayList<Button> getButtons(){
-        return buttons;
+        start.drawText(0, 0, "Play", Towser.fonts.get("normalL"));
+        create.drawText(0, 0, "Create", Towser.fonts.get("normalL"));
+        option.drawText(0, 0, "Options", Towser.fonts.get("normalL"));
+        exit.drawText(0, 0, "Exit", Towser.fonts.get("normalL"));
     }
 }

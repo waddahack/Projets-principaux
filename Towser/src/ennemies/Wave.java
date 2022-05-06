@@ -1,47 +1,24 @@
 package ennemies;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import towser.Game;
+import static towser.Towser.game;
 
 
 public class Wave{
     
-    private int nbEnnemies, index;
-    private double speedRatio;
+    private int index;
     private ArrayList<Enemy> enemies;
     private double startTime;
     
-    public Wave(int nbEnnemies, int ennemyType){
-        super();
-        this.nbEnnemies = nbEnnemies;
+    public Wave(){
         enemies = new ArrayList<Enemy>();
-        int i;
-        switch(ennemyType){
-            case 0 :
-                for(i = 0 ; i < nbEnnemies ; i++)
-                    enemies.add(new BasicEnemy());
-                break;
-            case 1 :
-                for(i = 0 ; i < nbEnnemies ; i++)
-                    enemies.add(new FastEnemy());
-                break;
-            case 2 :
-                for(i = 0 ; i < nbEnnemies ; i++)
-                    enemies.add(new StrongEnemy());
-                break;
-            case 3 :
-                for(i = 0 ; i < nbEnnemies ; i++)
-                    enemies.add(new TrickyEnemy());
-                break;
-            default :
-                for(i = 0 ; i < nbEnnemies ; i++)
-                    enemies.add(new BasicEnemy());
-                break;
-        }
-        speedRatio = enemies.get(0).getSpeedRatio();
         index = 0;
         startTime = System.currentTimeMillis();
+    }
+    
+    public void addEnemy(Enemy e){
+        enemies.add(e);
     }
     
     public ArrayList<Enemy> getEnnemies(){
@@ -49,8 +26,11 @@ public class Wave{
     }
     
     public void update(){
-        if(System.currentTimeMillis() - startTime >= 1000*speedRatio && index < enemies.size() || index == 0){
-            enemies.get(index).setStarted(true);
+        if(index == enemies.size())
+            return;
+        Enemy nextEnemy = enemies.get(index);
+        if(System.currentTimeMillis() - startTime >= 1000*nextEnemy.getSpawnSpeed()/game.gameSpeed && index < enemies.size() || index == 0){
+            nextEnemy.setStarted(true);
             startTime = System.currentTimeMillis();
             index++;
         }
