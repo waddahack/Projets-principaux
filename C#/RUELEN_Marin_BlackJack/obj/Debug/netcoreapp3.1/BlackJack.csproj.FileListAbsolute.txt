@@ -1,0 +1,13 @@
+F:\Programmation\C#\BlackJack\bin\Debug\netcoreapp3.1\BlackJack.exe
+F:\Programmation\C#\BlackJack\bin\Debug\netcoreapp3.1\BlackJack.deps.json
+F:\Programmation\C#\BlackJack\bin\Debug\netcoreapp3.1\BlackJack.runtimeconfig.json
+F:\Programmation\C#\BlackJack\bin\Debug\netcoreapp3.1\BlackJack.runtimeconfig.dev.json
+F:\Programmation\C#\BlackJack\bin\Debug\netcoreapp3.1\BlackJack.dll
+F:\Programmation\C#\BlackJack\bin\Debug\netcoreapp3.1\BlackJack.pdb
+F:\Programmation\C#\BlackJack\obj\Debug\netcoreapp3.1\BlackJack.AssemblyInfoInputs.cache
+F:\Programmation\C#\BlackJack\obj\Debug\netcoreapp3.1\BlackJack.AssemblyInfo.cs
+F:\Programmation\C#\BlackJack\obj\Debug\netcoreapp3.1\BlackJack.csproj.CoreCompileInputs.cache
+F:\Programmation\C#\BlackJack\obj\Debug\netcoreapp3.1\BlackJack.dll
+F:\Programmation\C#\BlackJack\obj\Debug\netcoreapp3.1\BlackJack.pdb
+F:\Programmation\C#\BlackJack\obj\Debug\netcoreapp3.1\BlackJack.genruntimeconfig.cache
+F:\Programmation\C#\BlackJack\obj\Debug\netcoreapp3.1\BlackJack.csprojAssemblyReference.cache

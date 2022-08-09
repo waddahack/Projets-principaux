@@ -1,0 +1,13 @@
+F:\Programmation\C#\Jeu des allumettes\bin\Debug\netcoreapp3.1\Jeu des allumettes.exe
+F:\Programmation\C#\Jeu des allumettes\bin\Debug\netcoreapp3.1\Jeu des allumettes.deps.json
+F:\Programmation\C#\Jeu des allumettes\bin\Debug\netcoreapp3.1\Jeu des allumettes.runtimeconfig.json
+F:\Programmation\C#\Jeu des allumettes\bin\Debug\netcoreapp3.1\Jeu des allumettes.runtimeconfig.dev.json
+F:\Programmation\C#\Jeu des allumettes\bin\Debug\netcoreapp3.1\Jeu des allumettes.dll
+F:\Programmation\C#\Jeu des allumettes\bin\Debug\netcoreapp3.1\Jeu des allumettes.pdb
+F:\Programmation\C#\Jeu des allumettes\obj\Debug\netcoreapp3.1\Jeu des allumettes.csprojAssemblyReference.cache
+F:\Programmation\C#\Jeu des allumettes\obj\Debug\netcoreapp3.1\Jeu des allumettes.AssemblyInfoInputs.cache
+F:\Programmation\C#\Jeu des allumettes\obj\Debug\netcoreapp3.1\Jeu des allumettes.AssemblyInfo.cs
+F:\Programmation\C#\Jeu des allumettes\obj\Debug\netcoreapp3.1\Jeu des allumettes.csproj.CoreCompileInputs.cache
+F:\Programmation\C#\Jeu des allumettes\obj\Debug\netcoreapp3.1\Jeu des allumettes.dll
+F:\Programmation\C#\Jeu des allumettes\obj\Debug\netcoreapp3.1\Jeu des allumettes.pdb
+F:\Programmation\C#\Jeu des allumettes\obj\Debug\netcoreapp3.1\Jeu des allumettes.genruntimeconfig.cache
